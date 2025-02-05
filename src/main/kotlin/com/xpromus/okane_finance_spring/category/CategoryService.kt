@@ -23,7 +23,7 @@ class CategoryService @Autowired constructor(
     }
 
     fun createCategory(categoryDto: CategoryDto): Category {
-        return categoryRepository.save(convertCategoryDtoToCategory(categoryDto))
+        return categoryRepository.save(convertCategoryDtoToCategory(this, categoryDto))
     }
 
     @Transactional

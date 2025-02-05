@@ -17,5 +17,11 @@ class Category (
         orphanRemoval = false,
         fetch = FetchType.EAGER
     )
-    val transactions: List<Transaction> = emptyList()
+    val transactions: List<Transaction> = emptyList(),
+    @OneToOne
+    @JoinColumn(name = "parentCategory_id", referencedColumnName = "id")
+    var parentCategory: Category? = null,
+    @OneToOne
+    @JoinColumn(name = "childCategory_id", referencedColumnName = "id")
+    var childCategory: Category? = null
 )
