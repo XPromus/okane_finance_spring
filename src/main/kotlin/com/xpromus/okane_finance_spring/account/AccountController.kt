@@ -24,9 +24,9 @@ class AccountController @Autowired constructor(
     }
 
     @PostMapping
-    fun createAccount(@RequestBody account: AccountDto): ResponseEntity<Account> {
+    fun createAccount(@RequestBody accountDto: AccountDto): ResponseEntity<Account> {
         return ResponseEntity<Account>(
-            accountService.createAccount(account),
+            accountService.createAccount(accountDto),
             HttpStatus.OK
         )
     }
@@ -48,7 +48,7 @@ class AccountController @Autowired constructor(
     @PutMapping
     fun updateAccount(
         @RequestBody accountDto: AccountDto,
-        @PathVariable id: UUID
+        @RequestParam(name = "id", required = true) id: UUID
     ): ResponseEntity<Account> {
         return ResponseEntity<Account>(
             accountService.updateAccount(accountDto, id),
