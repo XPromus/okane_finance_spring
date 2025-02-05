@@ -1,5 +1,7 @@
 package com.xpromus.okane_finance_spring.category
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.xpromus.okane_finance_spring.budget.Budget
 import com.xpromus.okane_finance_spring.transaction.Transaction
 import jakarta.persistence.*
 import java.util.UUID
@@ -23,5 +25,9 @@ class Category (
     var parentCategory: Category? = null,
     @OneToOne
     @JoinColumn(name = "childCategory_id", referencedColumnName = "id")
-    var childCategory: Category? = null
+    var childCategory: Category? = null,
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "budget_id")
+    var targetBudget: Budget? = null
 )

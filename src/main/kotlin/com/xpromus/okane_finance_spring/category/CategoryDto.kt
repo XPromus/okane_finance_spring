@@ -6,6 +6,7 @@ data class CategoryDto(
     val categoryName: String,
     val parentCategory: UUID?,
     val childCategory: UUID?,
+    val targetBudget: UUID?
 )
 
 fun convertCategoryDtoToCategory(

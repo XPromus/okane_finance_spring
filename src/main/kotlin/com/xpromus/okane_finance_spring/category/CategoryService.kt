@@ -35,10 +35,10 @@ class CategoryService @Autowired constructor(
         return categoryRepository.findById(id).map {
             val save = categoryRepository.save(
                 Category(
-                id = it.id,
-                categoryName = categoryDto.categoryName,
-                transactions = it.transactions
-            )
+                    id = it.id,
+                    categoryName = categoryDto.categoryName,
+                    transactions = it.transactions
+                )
             )
             Category(
                 id = save.id,
