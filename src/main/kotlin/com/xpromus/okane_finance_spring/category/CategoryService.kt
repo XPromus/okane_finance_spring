@@ -1,4 +1,4 @@
-package com.xpromus.okane_finance_spring.transaction.category
+package com.xpromus.okane_finance_spring.category
 
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,11 +33,13 @@ class CategoryService @Autowired constructor(
 
     fun updateCategory(categoryDto: CategoryDto, id: UUID): Category {
         return categoryRepository.findById(id).map {
-            val save = categoryRepository.save(Category(
+            val save = categoryRepository.save(
+                Category(
                 id = it.id,
                 categoryName = categoryDto.categoryName,
                 transactions = it.transactions
-            ))
+            )
+            )
             Category(
                 id = save.id,
                 categoryName = save.categoryName,

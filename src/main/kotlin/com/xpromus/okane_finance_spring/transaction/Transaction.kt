@@ -3,8 +3,8 @@ package com.xpromus.okane_finance_spring.transaction
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okane_finance_spring.account.Account
 import com.xpromus.okane_finance_spring.payee.Payee
-import com.xpromus.okane_finance_spring.transaction.category.Category
-import com.xpromus.okane_finance_spring.transaction.tag.Tag
+import com.xpromus.okane_finance_spring.category.Category
+import com.xpromus.okane_finance_spring.tag.Tag
 import jakarta.persistence.*
 import java.util.Date
 import java.util.UUID

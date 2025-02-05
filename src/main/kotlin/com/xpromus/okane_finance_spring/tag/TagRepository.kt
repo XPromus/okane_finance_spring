@@ -1,4 +1,4 @@
-package com.xpromus.okane_finance_spring.transaction.tag
+package com.xpromus.okane_finance_spring.tag
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

@@ -1,4 +1,4 @@
-package com.xpromus.okane_finance_spring.transaction.tag
+package com.xpromus.okane_finance_spring.tag
 
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,11 +33,13 @@ class TagService @Autowired constructor(
 
     fun updateTag(tagDto: TagDto, id: UUID): Tag {
         return tagRepository.findById(id).map {
-            val save = tagRepository.save(Tag(
+            val save = tagRepository.save(
+                Tag(
                 id = it.id,
                 tagName = tagDto.tagName,
                 transactions = it.transactions
-            ))
+            )
+            )
             Tag(
                 id = save.id,
                 tagName = save.tagName,

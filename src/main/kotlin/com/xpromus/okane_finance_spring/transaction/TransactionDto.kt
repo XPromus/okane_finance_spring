@@ -2,8 +2,8 @@ package com.xpromus.okane_finance_spring.transaction
 
 import com.xpromus.okane_finance_spring.account.AccountService
 import com.xpromus.okane_finance_spring.payee.PayeeService
-import com.xpromus.okane_finance_spring.transaction.category.CategoryService
-import com.xpromus.okane_finance_spring.transaction.tag.TagService
+import com.xpromus.okane_finance_spring.category.CategoryService
+import com.xpromus.okane_finance_spring.tag.TagService
 import java.util.Date
 import java.util.UUID
 

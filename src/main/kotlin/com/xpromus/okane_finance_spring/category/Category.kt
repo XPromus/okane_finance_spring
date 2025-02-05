@@ -1,4 +1,4 @@
-package com.xpromus.okane_finance_spring.transaction.category
+package com.xpromus.okane_finance_spring.category
 
 import com.xpromus.okane_finance_spring.transaction.Transaction
 import jakarta.persistence.*
