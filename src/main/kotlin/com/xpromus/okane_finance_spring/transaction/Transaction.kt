@@ -20,7 +20,7 @@ class Transaction (
     @Column(nullable = false)
     val doneDate: Date = Date(),
     @Column(nullable = true)
-    val finishedDate: Date? = Date(),
+    val finishedDate: Date = Date(),
     @Column(nullable = false)
     val amount: Long = 0,
     @ManyToOne
