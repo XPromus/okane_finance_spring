@@ -13,7 +13,7 @@ interface CategoryRepository : JpaRepository<Category, UUID> {
 
     @Query(
         "SELECT c FROM category c WHERE " +
-        "(:id IS NULL OR c.id = :id) AND" +
+        "(:id IS NULL OR c.id = :id) AND " +
         "(:categoryName IS NULL OR c.categoryName = :categoryName)"
     )
     fun findCategoryByIdAndCategoryName(

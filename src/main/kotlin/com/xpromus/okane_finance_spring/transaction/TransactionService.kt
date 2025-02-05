@@ -3,6 +3,7 @@ package com.xpromus.okane_finance_spring.transaction
 import com.xpromus.okane_finance_spring.account.AccountService
 import com.xpromus.okane_finance_spring.payee.PayeeService
 import com.xpromus.okane_finance_spring.transaction.category.CategoryService
+import com.xpromus.okane_finance_spring.transaction.tag.TagService
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -13,7 +14,8 @@ class TransactionService @Autowired constructor(
     private val transactionRepository: TransactionRepository,
     private val accountService: AccountService,
     private val payeeService: PayeeService,
-    private val categoryService: CategoryService
+    private val categoryService: CategoryService,
+    private val tagService: TagService
 ) {
 
     fun getTransactionById(id: UUID): Transaction? {
@@ -34,7 +36,8 @@ class TransactionService @Autowired constructor(
                 transactionDto,
                 accountService,
                 payeeService,
-                categoryService
+                categoryService,
+                tagService
             )
         )
     }
@@ -49,7 +52,8 @@ class TransactionService @Autowired constructor(
             transactionDto,
             accountService,
             payeeService,
-            categoryService
+            categoryService,
+            tagService
         )
         return transactionRepository.findById(id).map {
             val save = transactionRepository.save(Transaction(

@@ -14,8 +14,8 @@ class AccountController @Autowired constructor(
 
     @GetMapping
     fun getAccounts(
-        @RequestParam(name = "id", required = false) id: UUID,
-        @RequestParam(name = "accountName", required = false) accountName: String
+        @RequestParam(name = "id", required = false) id: UUID?,
+        @RequestParam(name = "accountName", required = false) accountName: String?
     ): ResponseEntity<List<Account>> {
         return ResponseEntity<List<Account>>(
             accountService.getAllAccounts(id, accountName),

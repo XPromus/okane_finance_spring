@@ -4,13 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okane_finance_spring.account.Account
 import com.xpromus.okane_finance_spring.payee.Payee
 import com.xpromus.okane_finance_spring.transaction.category.Category
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import com.xpromus.okane_finance_spring.transaction.tag.Tag
+import jakarta.persistence.*
 import java.util.Date
 import java.util.UUID
 
@@ -27,6 +22,7 @@ class Transaction (
     val finishedDate: Date = Date(),
     @Column(nullable = false)
     val amount: Long = 0,
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "account_id")
@@ -38,5 +34,12 @@ class Transaction (
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "category_id")
-    val targetCategory: Category = Category()
+    val targetCategory: Category = Category(),
+    @ManyToMany
+    @JoinTable(
+        name = "transaction_tag",
+        joinColumns = [JoinColumn(name = "transaction_id")],
+        inverseJoinColumns = [JoinColumn(name = "tag_id")]
+    )
+    val targetTags: List<Tag> = emptyList()
 )
