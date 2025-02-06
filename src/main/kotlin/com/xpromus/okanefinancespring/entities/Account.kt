@@ -8,8 +8,8 @@ import java.util.UUID
 @Table(name = "account")
 class Account(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: UUID = UUID.randomUUID(),
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: UUID? = null,
     @Column(name = "accountName")
     val accountName: String = "",
     @OneToMany(

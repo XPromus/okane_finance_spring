@@ -9,8 +9,8 @@ import java.util.UUID
 @Table(name = "transaction")
 class Transaction(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: UUID = UUID.randomUUID(),
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: UUID? = null,
     @Column(nullable = false)
     val transactionName: String = "",
     @Column(nullable = false)

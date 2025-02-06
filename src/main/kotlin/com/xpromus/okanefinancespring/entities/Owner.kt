@@ -9,7 +9,7 @@ import java.util.UUID
 class Owner(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
     @Column(name = "firstName", nullable = false)
     val firstName: String = "",
     @Column(name = "lastName", nullable = false)

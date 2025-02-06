@@ -8,7 +8,7 @@ import java.util.UUID
 class Budget(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
     @Column(nullable = false)
     val budgetName: String = "",
     @Column(nullable = false)

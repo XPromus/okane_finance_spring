@@ -9,7 +9,7 @@ import java.util.UUID
 class Category(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
     @Column(nullable = false)
     val categoryName: String = "",
     @OneToMany(

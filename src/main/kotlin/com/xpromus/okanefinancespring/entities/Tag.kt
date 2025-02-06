@@ -8,7 +8,7 @@ import java.util.UUID
 class Tag(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
     @Column(nullable = false)
     val tagName: String = "",
     @ManyToMany(mappedBy = "targetTags")
