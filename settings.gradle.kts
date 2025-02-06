@@ -1,1 +1,1 @@
-rootProject.name = "okane_finance_spring"
+rootProject.name = "okanefinancespring"
