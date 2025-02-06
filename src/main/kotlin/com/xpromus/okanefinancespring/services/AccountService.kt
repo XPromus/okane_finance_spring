@@ -6,14 +6,13 @@ import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.mapper.convertAccountDtoToAccount
 import com.xpromus.okanefinancespring.repositories.AccountRepository
 import jakarta.transaction.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class AccountService @Autowired constructor(
+class AccountService(
     private val accountRepository: AccountRepository,
-    private val transactionService: TransactionService
+    private val transactionService: TransactionService,
 ) {
 
     fun getAccountById(id: UUID): Account {
@@ -57,8 +56,8 @@ class AccountService @Autowired constructor(
         }.orElseGet(null)
     }
 
-    fun addTransactions(transactionIds: List<UUID>, accountId: UUID): Account {
-        val transactionsToBeAdded = transactionIds.map {
+    fun addTransactions(transactions: List<UUID>, accountId: UUID): Account {
+        val transactionsToBeAdded = transactions.map {
             transactionService.getTransactionById(it)
         }
 

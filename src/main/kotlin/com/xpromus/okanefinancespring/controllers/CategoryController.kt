@@ -45,4 +45,13 @@ class CategoryController(
         return categoryService.updateCategory(categoryDto, id)
     }
 
+    @PutMapping("/{id}/transactions")
+    @ResponseStatus(HttpStatus.OK)
+    fun addTransactions(
+        @PathVariable id: UUID,
+        @RequestBody transactions: List<UUID>
+    ): Category {
+        return categoryService.addTransactions(transactions, id)
+    }
+
 }

@@ -45,4 +45,13 @@ class PayeeController(
         return payeeService.updatePayee(payeeDto, id)
     }
 
+    @PutMapping("/{id}/transactions")
+    @ResponseStatus(HttpStatus.OK)
+    fun addTransactions(
+        @PathVariable id: UUID,
+        @RequestBody transactions: List<UUID>
+    ): Payee {
+        return payeeService.addTransactions(transactions, id)
+    }
+
 }

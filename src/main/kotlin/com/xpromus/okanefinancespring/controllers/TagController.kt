@@ -45,4 +45,13 @@ class TagController(
         return tagService.updateTag(tagDto, id)
     }
 
+    @PutMapping("/{id}/transactions")
+    @ResponseStatus(HttpStatus.OK)
+    fun addTransactions(
+        @PathVariable id: UUID,
+        @RequestBody transactions: List<UUID>
+    ): Tag {
+        return tagService.addTransactions(transactions, id)
+    }
+
 }

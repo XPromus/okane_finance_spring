@@ -6,13 +6,13 @@ import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.mapper.convertBudgetDtoToBudget
 import com.xpromus.okanefinancespring.repositories.BudgetRepository
 import jakarta.transaction.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class BudgetService @Autowired constructor(
-    private val budgetRepository: BudgetRepository
+class BudgetService(
+    private val budgetRepository: BudgetRepository,
+    private val categoryService: CategoryService
 ) {
 
     fun getBudgetById(id: UUID): Budget {
@@ -22,7 +22,7 @@ class BudgetService @Autowired constructor(
     }
 
     fun getAllBudgets(
-        id: UUID?, budgetName: String?, maxValue: Long?
+        id: UUID?, budgetName: String?, maxValue: Long?,
     ): List<Budget> {
         if ((id ?: budgetName ?: maxValue) != null) {
             return budgetRepository.findBudgetByIdAndBudgetNameAndMaxValue(
@@ -51,6 +51,29 @@ class BudgetService @Autowired constructor(
                     budgetName = budgetDto.budgetName,
                     maxValue = budgetDto.maxValue,
                     targetCategories = it.targetCategories
+                )
+            )
+            Budget(
+                id = save.id,
+                budgetName = save.budgetName,
+                maxValue = save.maxValue,
+                targetCategories = save.targetCategories
+            )
+        }.orElseGet(null)
+    }
+
+    fun addCategories(categories: List<UUID>, budgetId: UUID): Budget {
+        val categoriesToBeAdded = categories.map {
+            categoryService.getCategoryById(it)
+        }
+
+        return budgetRepository.findById(budgetId).map {
+            val save = budgetRepository.save(
+                Budget(
+                    id = it.id,
+                    budgetName = it.budgetName,
+                    maxValue = it.maxValue,
+                    targetCategories = it.targetCategories.union(categoriesToBeAdded).toList()
                 )
             )
             Budget(

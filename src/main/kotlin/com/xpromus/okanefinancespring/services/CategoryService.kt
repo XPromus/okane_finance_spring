@@ -6,13 +6,13 @@ import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.mapper.convertCategoryDtoToCategory
 import com.xpromus.okanefinancespring.repositories.CategoryRepository
 import jakarta.transaction.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class CategoryService @Autowired constructor(
-    private val categoryRepository: CategoryRepository
+class CategoryService(
+    private val categoryRepository: CategoryRepository,
+    private val transactionService: TransactionService,
 ) {
 
     fun getCategoryById(id: UUID): Category {
@@ -52,6 +52,33 @@ class CategoryService @Autowired constructor(
                 id = save.id,
                 categoryName = save.categoryName,
                 transactions = save.transactions
+            )
+        }.orElseGet(null)
+    }
+
+    fun addTransactions(transactions: List<UUID>, categoryId: UUID): Category {
+        val transactionsToBeAdded = transactions.map {
+            transactionService.getTransactionById(it)
+        }
+
+        return categoryRepository.findById(categoryId).map {
+            val save = categoryRepository.save(
+                Category(
+                    id = it.id,
+                    categoryName = it.categoryName,
+                    transactions = it.transactions.union(transactionsToBeAdded).toList(),
+                    parentCategory = it.parentCategory,
+                    childCategory = it.childCategory,
+                    targetBudget = it.targetBudget
+                )
+            )
+            Category(
+                id = save.id,
+                categoryName = save.categoryName,
+                transactions = save.transactions.union(transactionsToBeAdded).toList(),
+                parentCategory = save.parentCategory,
+                childCategory = save.childCategory,
+                targetBudget = save.targetBudget
             )
         }.orElseGet(null)
     }

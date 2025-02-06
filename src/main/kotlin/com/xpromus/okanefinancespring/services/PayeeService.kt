@@ -6,13 +6,13 @@ import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.mapper.convertPayeeDtoToPayee
 import com.xpromus.okanefinancespring.repositories.PayeeRepository
 import jakarta.transaction.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class PayeeService @Autowired constructor(
-    private val payeeRepository: PayeeRepository
+class PayeeService(
+    private val payeeRepository: PayeeRepository,
+    private val transactionService: TransactionService,
 ) {
     fun getPayeeById(id: UUID): Payee {
         return payeeRepository.findById(id).orElseGet {
@@ -45,6 +45,27 @@ class PayeeService @Autowired constructor(
                     id = it.id,
                     payeeName = payeeDto.payeeName,
                     transactions = it.transactions
+                )
+            )
+            Payee(
+                id = save.id,
+                payeeName = save.payeeName,
+                transactions = save.transactions
+            )
+        }.orElseGet(null)
+    }
+
+    fun addTransactions(transactions: List<UUID>, payeeId: UUID): Payee {
+        val transactionsToBeAdded = transactions.map {
+            transactionService.getTransactionById(it)
+        }
+
+        return payeeRepository.findById(payeeId).map {
+            val save = payeeRepository.save(
+                Payee(
+                    id = it.id,
+                    payeeName = it.payeeName,
+                    transactions = it.transactions.union(transactionsToBeAdded).toList()
                 )
             )
             Payee(

@@ -6,13 +6,12 @@ import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.mapper.covertTransactionDtoToTransaction
 import com.xpromus.okanefinancespring.repositories.TransactionRepository
 import jakarta.transaction.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class TransactionService @Autowired constructor(
-    private val transactionRepository: TransactionRepository
+class TransactionService(
+    private val transactionRepository: TransactionRepository,
 ) {
 
     fun getTransactionById(id: UUID): Transaction {

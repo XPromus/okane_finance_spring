@@ -67,12 +67,12 @@ class OwnerService(
         }.orElseGet(null)
     }
 
-    fun addAccounts(accounts: List<UUID>, id: UUID): Owner {
+    fun addAccounts(accounts: List<UUID>, ownerId: UUID): Owner {
         val accountsToBeAdded = accounts.map {
             accountService.getAccountById(it)
         }
 
-        return ownerRepository.findById(id).map {
+        return ownerRepository.findById(ownerId).map {
             val save = ownerRepository.save(
                 Owner(
                     id = it.id,
