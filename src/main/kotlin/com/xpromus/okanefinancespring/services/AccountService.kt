@@ -1,18 +1,19 @@
 package com.xpromus.okanefinancespring.services
 
 import com.xpromus.okanefinancespring.dto.AccountDto
-import com.xpromus.okanefinancespring.dto.convertAccountDtoToAccount
 import com.xpromus.okanefinancespring.entities.Account
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
+import com.xpromus.okanefinancespring.mapper.convertAccountDtoToAccount
 import com.xpromus.okanefinancespring.repositories.AccountRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class AccountService @Autowired constructor(
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val transactionService: TransactionService
 ) {
 
     fun getAccountById(id: UUID): Account {
@@ -52,6 +53,29 @@ class AccountService @Autowired constructor(
                 id = save.id,
                 accountName = save.accountName,
                 transactions = save.transactions
+            )
+        }.orElseGet(null)
+    }
+
+    fun addTransactions(transactionIds: List<UUID>, accountId: UUID): Account {
+        val transactionsToBeAdded = transactionIds.map {
+            transactionService.getTransactionById(it)
+        }
+
+        return accountRepository.findById(accountId).map {
+            val save = accountRepository.save(
+                Account(
+                    id = it.id,
+                    accountName = it.accountName,
+                    transactions = it.transactions.union(transactionsToBeAdded).toList(),
+                    owner = it.owner
+                )
+            )
+            Account(
+                id = save.id,
+                accountName = save.accountName,
+                transactions = save.transactions,
+                owner = save.owner
             )
         }.orElseGet(null)
     }

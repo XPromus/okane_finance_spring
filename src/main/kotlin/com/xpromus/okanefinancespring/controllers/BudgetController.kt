@@ -29,19 +29,19 @@ class BudgetController(
         return budgetService.createBudget(budgetDto)
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteBudget(
-        @RequestParam(name = "id", required = true) id: UUID
+        @PathVariable id: UUID,
     ) {
         budgetService.deleteBudget(id)
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun updateBudget(
-        @RequestBody budgetDto: BudgetDto,
-        @RequestParam(name = "id", required = true) id: UUID
+        @PathVariable id: UUID,
+        @RequestBody budgetDto: BudgetDto
     ): Budget {
         return budgetService.updateBudget(budgetDto, id)
     }

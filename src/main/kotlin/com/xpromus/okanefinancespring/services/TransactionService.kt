@@ -1,9 +1,9 @@
 package com.xpromus.okanefinancespring.services
 
 import com.xpromus.okanefinancespring.dto.TransactionDto
-import com.xpromus.okanefinancespring.dto.covertTransactionDtoToTransaction
 import com.xpromus.okanefinancespring.entities.Transaction
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
+import com.xpromus.okanefinancespring.mapper.covertTransactionDtoToTransaction
 import com.xpromus.okanefinancespring.repositories.TransactionRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,11 +12,7 @@ import java.util.*
 
 @Service
 class TransactionService @Autowired constructor(
-    private val transactionRepository: TransactionRepository,
-    private val accountService: AccountService,
-    private val payeeService: PayeeService,
-    private val categoryService: CategoryService,
-    private val tagService: TagService
+    private val transactionRepository: TransactionRepository
 ) {
 
     fun getTransactionById(id: UUID): Transaction {
@@ -36,11 +32,7 @@ class TransactionService @Autowired constructor(
     fun createTransaction(transactionDto: TransactionDto): Transaction {
         return transactionRepository.save(
             covertTransactionDtoToTransaction(
-                transactionDto,
-                accountService,
-                payeeService,
-                categoryService,
-                tagService
+                transactionDto
             )
         )
     }
@@ -53,11 +45,7 @@ class TransactionService @Autowired constructor(
 
     fun updateTransaction(transactionDto: TransactionDto, id: UUID): Transaction {
         val updatedTransaction = covertTransactionDtoToTransaction(
-            transactionDto,
-            accountService,
-            payeeService,
-            categoryService,
-            tagService
+            transactionDto
         )
         return transactionRepository.findById(id).map {
             val save = transactionRepository.save(
@@ -67,9 +55,9 @@ class TransactionService @Autowired constructor(
                     doneDate = updatedTransaction.doneDate,
                     finishedDate = updatedTransaction.finishedDate,
                     amount = updatedTransaction.amount,
-                    targetAccount = updatedTransaction.targetAccount,
-                    targetPayee = updatedTransaction.targetPayee,
-                    targetCategory = updatedTransaction.targetCategory
+                    targetAccount = it.targetAccount,
+                    targetPayee = it.targetPayee,
+                    targetCategory = it.targetCategory
                 )
             )
             Transaction(

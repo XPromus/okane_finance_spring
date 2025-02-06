@@ -28,19 +28,19 @@ class PayeeController(
         return payeeService.createPayee(payee)
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deletePayee(
-        @RequestParam(name = "id", required = true) id: UUID
+        @PathVariable id: UUID
     ) {
         payeeService.deletePayee(id)
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun updatePayee(
-        @RequestBody payeeDto: PayeeDto,
-        @RequestParam(name = "id", required = true) id: UUID
+        @PathVariable id: UUID,
+        @RequestBody payeeDto: PayeeDto
     ): Payee {
         return payeeService.updatePayee(payeeDto, id)
     }

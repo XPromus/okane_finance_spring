@@ -1,9 +1,9 @@
 package com.xpromus.okanefinancespring.services
 
 import com.xpromus.okanefinancespring.dto.CategoryDto
-import com.xpromus.okanefinancespring.dto.convertCategoryDtoToCategory
 import com.xpromus.okanefinancespring.entities.Category
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
+import com.xpromus.okanefinancespring.mapper.convertCategoryDtoToCategory
 import com.xpromus.okanefinancespring.repositories.CategoryRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,7 +30,7 @@ class CategoryService @Autowired constructor(
     }
 
     fun createCategory(categoryDto: CategoryDto): Category {
-        return categoryRepository.save(convertCategoryDtoToCategory(this, categoryDto))
+        return categoryRepository.save(convertCategoryDtoToCategory(categoryDto))
     }
 
     @Transactional

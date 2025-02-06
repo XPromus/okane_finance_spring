@@ -1,14 +1,14 @@
 package com.xpromus.okanefinancespring.services
 
 import com.xpromus.okanefinancespring.dto.TagDto
-import com.xpromus.okanefinancespring.dto.convertTagDtoToTag
 import com.xpromus.okanefinancespring.entities.Tag
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
+import com.xpromus.okanefinancespring.mapper.convertTagDtoToTag
 import com.xpromus.okanefinancespring.repositories.TagRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class TagService @Autowired constructor(

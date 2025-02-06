@@ -28,19 +28,19 @@ class CategoryController(
         return categoryService.createCategory(categoryDto)
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteCategory(
-        @RequestParam(name = "id", required = true) id: UUID
+        @PathVariable id: UUID
     ) {
         categoryService.deleteCategory(id)
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun updateCategory(
-        @RequestBody categoryDto: CategoryDto,
-        @RequestParam(name = "id", required = true) id: UUID
+        @PathVariable id: UUID,
+        @RequestBody categoryDto: CategoryDto
     ): Category {
         return categoryService.updateCategory(categoryDto, id)
     }

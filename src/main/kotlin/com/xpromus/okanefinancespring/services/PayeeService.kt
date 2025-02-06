@@ -1,9 +1,9 @@
 package com.xpromus.okanefinancespring.services
 
 import com.xpromus.okanefinancespring.dto.PayeeDto
-import com.xpromus.okanefinancespring.dto.convertPayeeDtoToPayee
 import com.xpromus.okanefinancespring.entities.Payee
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
+import com.xpromus.okanefinancespring.mapper.convertPayeeDtoToPayee
 import com.xpromus.okanefinancespring.repositories.PayeeRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired

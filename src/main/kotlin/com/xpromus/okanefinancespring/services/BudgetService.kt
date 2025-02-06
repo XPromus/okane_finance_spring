@@ -1,9 +1,9 @@
 package com.xpromus.okanefinancespring.services
 
 import com.xpromus.okanefinancespring.dto.BudgetDto
-import com.xpromus.okanefinancespring.dto.convertBudgetDtoToBudget
 import com.xpromus.okanefinancespring.entities.Budget
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
+import com.xpromus.okanefinancespring.mapper.convertBudgetDtoToBudget
 import com.xpromus.okanefinancespring.repositories.BudgetRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired

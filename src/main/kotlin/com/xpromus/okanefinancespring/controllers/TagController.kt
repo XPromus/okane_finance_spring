@@ -28,19 +28,19 @@ class TagController(
         return tagService.createTag(tagDto)
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteTag(
-        @RequestParam(name = "id", required = true) id: UUID
+        @PathVariable id: UUID
     ) {
         tagService.deleteTag(id)
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun updateTag(
-        @RequestBody tagDto: TagDto,
-        @RequestParam(name = "id", required = true) id: UUID
+        @PathVariable id: UUID,
+        @RequestBody tagDto: TagDto
     ): Tag {
         return tagService.updateTag(tagDto, id)
     }
