@@ -49,13 +49,4 @@ class OwnerController(
         return ownerService.updateOwner(ownerDto, id)
     }
 
-    @PutMapping("/{id}/accounts")
-    @ResponseStatus(HttpStatus.OK)
-    fun addAccounts(
-        @PathVariable id: UUID,
-        @RequestBody accounts: List<UUID>
-    ): Owner {
-        return ownerService.addAccounts(accounts, id)
-    }
-
 }

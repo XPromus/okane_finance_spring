@@ -45,13 +45,4 @@ class AccountController(
         return accountService.updateAccount(accountDto, id)
     }
 
-    @PutMapping("/{id}/transactions")
-    @ResponseStatus(HttpStatus.OK)
-    fun addTransactions(
-        @PathVariable id: UUID,
-        @RequestBody transactions: List<UUID>,
-    ): Account {
-        return accountService.addTransactions(transactions, id)
-    }
-
 }

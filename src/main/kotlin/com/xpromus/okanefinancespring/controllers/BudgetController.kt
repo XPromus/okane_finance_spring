@@ -46,13 +46,4 @@ class BudgetController(
         return budgetService.updateBudget(budgetDto, id)
     }
 
-    @PutMapping("/{id}/categories")
-    @ResponseStatus(HttpStatus.OK)
-    fun addCategories(
-        @PathVariable id: UUID,
-        @RequestBody categories: List<UUID>
-    ): Budget {
-        return budgetService.addCategories(categories, id)
-    }
-
 }

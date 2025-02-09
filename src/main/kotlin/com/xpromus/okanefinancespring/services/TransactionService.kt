@@ -1,6 +1,8 @@
 package com.xpromus.okanefinancespring.services
 
 import com.xpromus.okanefinancespring.dto.TransactionDto
+import com.xpromus.okanefinancespring.entities.Category
+import com.xpromus.okanefinancespring.entities.Tag
 import com.xpromus.okanefinancespring.entities.Transaction
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.mapper.covertTransactionDtoToTransaction
@@ -12,6 +14,10 @@ import java.util.*
 @Service
 class TransactionService(
     private val transactionRepository: TransactionRepository,
+    private val accountService: AccountService,
+    private val payeeService: PayeeService,
+    private val categoryService: CategoryService,
+    private val tagService: TagService
 ) {
 
     fun getTransactionById(id: UUID): Transaction {
@@ -29,11 +35,21 @@ class TransactionService(
     }
 
     fun createTransaction(transactionDto: TransactionDto): Transaction {
-        return transactionRepository.save(
-            covertTransactionDtoToTransaction(
-                transactionDto
-            )
+        val targetAccount = accountService.getAccountById(UUID.fromString(transactionDto.accountId))
+        val targetPayee = payeeService.getPayeeById(UUID.fromString(transactionDto.payeeId))
+        val targetCategory: Category? = if (transactionDto.categoryId == null) {
+            null
+        } else {
+            categoryService.getCategoryById(UUID.fromString(transactionDto.categoryId))
+        }
+        val targetTags: List<Tag> = transactionDto.tagIds.map {
+            tagService.getTagById(UUID.fromString(it))
+        }
+
+        val transactionToBeAdded = covertTransactionDtoToTransaction(
+            transactionDto, targetAccount, targetPayee, targetCategory, targetTags
         )
+        return transactionRepository.save(transactionToBeAdded)
     }
 
     @Transactional
@@ -43,8 +59,19 @@ class TransactionService(
     }
 
     fun updateTransaction(transactionDto: TransactionDto, id: UUID): Transaction {
+        val targetAccount = accountService.getAccountById(UUID.fromString(transactionDto.accountId))
+        val targetPayee = payeeService.getPayeeById(UUID.fromString(transactionDto.payeeId))
+        val targetCategory: Category? = if (transactionDto.categoryId == null) {
+            null
+        } else {
+            categoryService.getCategoryById(UUID.fromString(transactionDto.categoryId))
+        }
+        val targetTags: List<Tag> = transactionDto.tagIds.map {
+            tagService.getTagById(UUID.fromString(it))
+        }
+
         val updatedTransaction = covertTransactionDtoToTransaction(
-            transactionDto
+            transactionDto, targetAccount, targetPayee, targetCategory, targetTags
         )
         return transactionRepository.findById(id).map {
             val save = transactionRepository.save(
@@ -54,9 +81,10 @@ class TransactionService(
                     doneDate = updatedTransaction.doneDate,
                     finishedDate = updatedTransaction.finishedDate,
                     amount = updatedTransaction.amount,
-                    targetAccount = it.targetAccount,
-                    targetPayee = it.targetPayee,
-                    targetCategory = it.targetCategory
+                    targetAccount = updatedTransaction.targetAccount,
+                    targetPayee = updatedTransaction.targetPayee,
+                    targetCategory = updatedTransaction.targetCategory,
+                    targetTags = updatedTransaction.targetTags
                 )
             )
             Transaction(
@@ -68,6 +96,7 @@ class TransactionService(
                 targetAccount = save.targetAccount,
                 targetPayee = save.targetPayee,
                 targetCategory = save.targetCategory,
+                targetTags = save.targetTags
             )
         }.orElseGet(null)
     }

@@ -1,6 +1,7 @@
 package com.xpromus.okanefinancespring.services
 
 import com.xpromus.okanefinancespring.dto.CategoryDto
+import com.xpromus.okanefinancespring.entities.Budget
 import com.xpromus.okanefinancespring.entities.Category
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.mapper.convertCategoryDtoToCategory
@@ -12,7 +13,7 @@ import java.util.*
 @Service
 class CategoryService(
     private val categoryRepository: CategoryRepository,
-    private val transactionService: TransactionService,
+    private val budgetService: BudgetService,
 ) {
 
     fun getCategoryById(id: UUID): Category {
@@ -30,7 +31,27 @@ class CategoryService(
     }
 
     fun createCategory(categoryDto: CategoryDto): Category {
-        return categoryRepository.save(convertCategoryDtoToCategory(categoryDto))
+        val targetBudget: Budget? = if (categoryDto.budgetId == null) {
+            null
+        } else {
+            budgetService.getBudgetById(UUID.fromString(categoryDto.budgetId))
+        }
+        val parentCategory: Category? = if (categoryDto.parentCategoryId == null) {
+            null
+        } else {
+            getCategoryById(UUID.fromString(categoryDto.parentCategoryId))
+        }
+        val childCategory: Category? = if (categoryDto.childCategoryId == null) {
+            null
+        } else {
+            getCategoryById(UUID.fromString(categoryDto.childCategoryId))
+        }
+
+        return categoryRepository.save(
+            convertCategoryDtoToCategory(
+                categoryDto, targetBudget, parentCategory, childCategory
+            )
+        )
     }
 
     @Transactional
@@ -40,45 +61,40 @@ class CategoryService(
     }
 
     fun updateCategory(categoryDto: CategoryDto, id: UUID): Category {
+        val targetBudget: Budget? = if (categoryDto.budgetId == null) {
+            null
+        } else {
+            budgetService.getBudgetById(UUID.fromString(categoryDto.budgetId))
+        }
+        val parentCategory: Category? = if (categoryDto.parentCategoryId == null) {
+            null
+        } else {
+            getCategoryById(UUID.fromString(categoryDto.parentCategoryId))
+        }
+        val childCategory: Category? = if (categoryDto.childCategoryId == null) {
+            null
+        } else {
+            getCategoryById(UUID.fromString(categoryDto.childCategoryId))
+        }
+
         return categoryRepository.findById(id).map {
             val save = categoryRepository.save(
                 Category(
                     id = it.id,
                     categoryName = categoryDto.categoryName,
-                    transactions = it.transactions
+                    transactions = it.transactions,
+                    targetBudget = targetBudget,
+                    parentCategory = parentCategory,
+                    childCategory = childCategory
                 )
             )
             Category(
                 id = save.id,
                 categoryName = save.categoryName,
-                transactions = save.transactions
-            )
-        }.orElseGet(null)
-    }
-
-    fun addTransactions(transactions: List<UUID>, categoryId: UUID): Category {
-        val transactionsToBeAdded = transactions.map {
-            transactionService.getTransactionById(it)
-        }
-
-        return categoryRepository.findById(categoryId).map {
-            val save = categoryRepository.save(
-                Category(
-                    id = it.id,
-                    categoryName = it.categoryName,
-                    transactions = it.transactions.union(transactionsToBeAdded).toList(),
-                    parentCategory = it.parentCategory,
-                    childCategory = it.childCategory,
-                    targetBudget = it.targetBudget
-                )
-            )
-            Category(
-                id = save.id,
-                categoryName = save.categoryName,
-                transactions = save.transactions.union(transactionsToBeAdded).toList(),
+                transactions = save.transactions,
+                targetBudget = save.targetBudget,
                 parentCategory = save.parentCategory,
-                childCategory = save.childCategory,
-                targetBudget = save.targetBudget
+                childCategory = save.childCategory
             )
         }.orElseGet(null)
     }

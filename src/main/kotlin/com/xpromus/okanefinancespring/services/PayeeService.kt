@@ -11,8 +11,7 @@ import java.util.*
 
 @Service
 class PayeeService(
-    private val payeeRepository: PayeeRepository,
-    private val transactionService: TransactionService,
+    private val payeeRepository: PayeeRepository
 ) {
     fun getPayeeById(id: UUID): Payee {
         return payeeRepository.findById(id).orElseGet {
@@ -55,24 +54,4 @@ class PayeeService(
         }.orElseGet(null)
     }
 
-    fun addTransactions(transactions: List<UUID>, payeeId: UUID): Payee {
-        val transactionsToBeAdded = transactions.map {
-            transactionService.getTransactionById(it)
-        }
-
-        return payeeRepository.findById(payeeId).map {
-            val save = payeeRepository.save(
-                Payee(
-                    id = it.id,
-                    payeeName = it.payeeName,
-                    transactions = it.transactions.union(transactionsToBeAdded).toList()
-                )
-            )
-            Payee(
-                id = save.id,
-                payeeName = save.payeeName,
-                transactions = save.transactions
-            )
-        }.orElseGet(null)
-    }
 }

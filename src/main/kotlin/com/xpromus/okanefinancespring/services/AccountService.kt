@@ -12,7 +12,7 @@ import java.util.*
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
-    private val transactionService: TransactionService,
+    private val ownerService: OwnerService
 ) {
 
     fun getAccountById(id: UUID): Account {
@@ -30,7 +30,10 @@ class AccountService(
     }
 
     fun createAccount(accountDto: AccountDto): Account {
-        return accountRepository.save(convertAccountDtoToAccount(accountDto))
+        val accountOwner = ownerService.getOwnerById(UUID.fromString(accountDto.ownerId))
+        val accountToSave = convertAccountDtoToAccount(accountDto, accountOwner)
+
+        return accountRepository.save(accountToSave)
     }
 
     @Transactional
@@ -45,29 +48,8 @@ class AccountService(
                 Account(
                     id = it.id,
                     accountName = accountDto.accountName,
-                    transactions = it.transactions
-                )
-            )
-            Account(
-                id = save.id,
-                accountName = save.accountName,
-                transactions = save.transactions
-            )
-        }.orElseGet(null)
-    }
-
-    fun addTransactions(transactions: List<UUID>, accountId: UUID): Account {
-        val transactionsToBeAdded = transactions.map {
-            transactionService.getTransactionById(it)
-        }
-
-        return accountRepository.findById(accountId).map {
-            val save = accountRepository.save(
-                Account(
-                    id = it.id,
-                    accountName = it.accountName,
-                    transactions = it.transactions.union(transactionsToBeAdded).toList(),
-                    owner = it.owner
+                    transactions = it.transactions,
+                    owner = ownerService.getOwnerById(UUID.fromString(accountDto.ownerId))
                 )
             )
             Account(

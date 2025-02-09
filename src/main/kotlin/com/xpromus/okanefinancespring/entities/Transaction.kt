@@ -23,11 +23,11 @@ class Transaction(
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "account_id")
-    val targetAccount: Account? = Account(),
+    val targetAccount: Account = Account(),
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "payee_id")
-    val targetPayee: Payee? = Payee(),
+    val targetPayee: Payee = Payee(),
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "category_id")

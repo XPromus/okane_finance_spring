@@ -12,8 +12,7 @@ import java.util.*
 
 @Service
 class TagService(
-    private val tagRepository: TagRepository,
-    private val transactionService: TransactionService,
+    private val tagRepository: TagRepository
 ) {
 
     fun getTagById(id: UUID): Tag {
@@ -47,27 +46,6 @@ class TagService(
                     id = it.id,
                     tagName = tagDto.tagName,
                     transactions = it.transactions
-                )
-            )
-            Tag(
-                id = save.id,
-                tagName = save.tagName,
-                transactions = save.transactions
-            )
-        }.orElseGet(null)
-    }
-
-    fun addTransactions(transactions: List<UUID>, tagId: UUID): Tag {
-        val transactionsToBeAdded = transactions.map {
-            transactionService.getTransactionById(it)
-        }
-
-        return tagRepository.findById(tagId).map {
-            val save = tagRepository.save(
-                Tag(
-                    id = it.id,
-                    tagName = it.tagName,
-                    transactions = it.transactions.union(transactionsToBeAdded).toList(),
                 )
             )
             Tag(

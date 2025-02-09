@@ -11,8 +11,7 @@ import java.util.*
 
 @Service
 class OwnerService(
-    private val ownerRepository: OwnerRepository,
-    private val accountService: AccountService,
+    private val ownerRepository: OwnerRepository
 ) {
 
     fun getOwnerById(id: UUID): Owner {
@@ -55,31 +54,6 @@ class OwnerService(
                     lastName = ownerDto.lastName,
                     birthday = ownerDto.birthday,
                     accounts = it.accounts
-                )
-            )
-            Owner(
-                id = save.id,
-                firstName = save.firstName,
-                lastName = save.lastName,
-                birthday = save.birthday,
-                accounts = save.accounts
-            )
-        }.orElseGet(null)
-    }
-
-    fun addAccounts(accounts: List<UUID>, ownerId: UUID): Owner {
-        val accountsToBeAdded = accounts.map {
-            accountService.getAccountById(it)
-        }
-
-        return ownerRepository.findById(ownerId).map {
-            val save = ownerRepository.save(
-                Owner(
-                    id = it.id,
-                    firstName = it.firstName,
-                    lastName = it.lastName,
-                    birthday = it.birthday,
-                    accounts = it.accounts.union(accountsToBeAdded).toList()
                 )
             )
             Owner(
