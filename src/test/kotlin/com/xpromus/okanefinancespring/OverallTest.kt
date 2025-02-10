@@ -52,7 +52,9 @@ class OverallTest @Autowired constructor (
             accountId = accountRequest.id.toString(),
             payeeId = payeeRequest.id.toString(),
             categoryId = null,
-            tagIds = emptyList()
+            tagIds = emptyList(),
+            isRecurring = false,
+            recurringDate = null
         )
         val transactionRequest = transactionService.createTransaction(transactionDto)
     }

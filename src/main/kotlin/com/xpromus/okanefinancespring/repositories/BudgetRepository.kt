@@ -14,7 +14,7 @@ interface BudgetRepository : JpaRepository<Budget, UUID> {
                 "(:budgetName IS NULL OR b.budgetName = :budgetName) AND" +
                 "(:maxValue IS NULL OR b.maxValue = :maxValue)"
     )
-    fun findBudgetByIdAndBudgetNameAndMaxValue(
+    fun findBudgetsByFields(
         id: UUID?,
         budgetName: String?,
         maxValue: Long?

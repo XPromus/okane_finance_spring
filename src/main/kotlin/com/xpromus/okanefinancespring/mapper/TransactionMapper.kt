@@ -6,11 +6,7 @@ import com.xpromus.okanefinancespring.entities.*
 
 fun covertTransactionDtoToTransaction(
     transactionDto: TransactionDto,
-    transactionClasses: TransactionClasses,
-//    targetAccount: Account,
-//    targetPayee: Payee,
-//    targetCategory: Category?,
-//    targetTags: List<Tag>
+    transactionClasses: TransactionClasses
 ): Transaction {
     return Transaction(
         transactionName = transactionDto.transactionName,

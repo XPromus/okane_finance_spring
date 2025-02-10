@@ -13,7 +13,7 @@ interface TagRepository : JpaRepository<Tag, UUID> {
                 "(:id IS NULL OR t.id = :id) AND " +
                 "(:tagName IS NULL OR t.tagName = :tagName)"
     )
-    fun findTagsByIdAndTagName(
+    fun findTagsByFields(
         id: UUID?,
         tagName: String?
     ): MutableList<Tag>

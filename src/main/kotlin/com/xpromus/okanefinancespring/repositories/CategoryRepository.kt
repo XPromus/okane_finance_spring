@@ -13,7 +13,7 @@ interface CategoryRepository : JpaRepository<Category, UUID> {
                 "(:id IS NULL OR c.id = :id) AND " +
                 "(:categoryName IS NULL OR c.categoryName = :categoryName)"
     )
-    fun findCategoryByIdAndCategoryName(
+    fun findCategoriesByFields(
         id: UUID?,
         categoryName: String?
     ): MutableList<Category>

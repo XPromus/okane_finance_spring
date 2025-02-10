@@ -13,7 +13,7 @@ interface AccountRepository : JpaRepository<Account, UUID> {
                 "(:id IS NULL OR a.id = :id) AND" +
                 "(:accountName IS NULL OR a.accountName = :accountName)"
     )
-    fun findAccountsByIdAndAccountName(
+    fun findBudgetsByFields(
         id: UUID?,
         accountName: String?
     ): MutableList<Account>

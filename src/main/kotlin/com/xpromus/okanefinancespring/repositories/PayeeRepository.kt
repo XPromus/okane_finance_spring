@@ -13,7 +13,7 @@ interface PayeeRepository : JpaRepository<Payee, UUID> {
                 "(:id IS NULL OR p.id = :id) AND" +
                 "(:payeeName IS NULL OR p.payeeName = :payeeName)"
     )
-    fun findPayeeByParameters(
+    fun findPayeesByFields(
         id: UUID?,
         payeeName: String?
     ): MutableList<Payee>

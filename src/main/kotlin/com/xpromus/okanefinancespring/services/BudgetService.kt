@@ -11,7 +11,7 @@ import java.util.*
 
 @Service
 class BudgetService(
-    private val budgetRepository: BudgetRepository
+    private val budgetRepository: BudgetRepository,
 ) {
 
     fun getBudgetById(id: UUID): Budget {
@@ -23,13 +23,11 @@ class BudgetService(
     fun getAllBudgets(
         id: UUID?, budgetName: String?, maxValue: Long?,
     ): List<Budget> {
-        if ((id ?: budgetName ?: maxValue) != null) {
-            return budgetRepository.findBudgetByIdAndBudgetNameAndMaxValue(
-                id, budgetName, maxValue
-            )
-        }
-
-        return budgetRepository.findAll()
+        return budgetRepository.findBudgetsByFields(
+            id,
+            budgetName,
+            maxValue
+        )
     }
 
     fun createBudget(budgetDto: BudgetDto): Budget {

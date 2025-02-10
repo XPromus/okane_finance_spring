@@ -25,37 +25,37 @@ interface TransactionRepository : JpaRepository<Transaction, UUID> {
         finishedDate: Date?,
         amount: Long?,
         isRecurring: Boolean?,
-        recurringDate: Date?
+        recurringDate: Date?,
     ): MutableList<Transaction>
 
-    @Query(
-        "SELECT t FROM transaction t WHERE " +
-                "(t.doneDate > :lowerRange) AND " +
-                "(t.doneDate < :upperRange)"
-    )
-    fun findTransactionsByDoneDateRange(
-        lowerRange: Date,
-        upperRange: Date
-    ): MutableList<Transaction>
-
-    @Query(
-        "SELECT t FROM transaction t WHERE " +
-                "(t.finishedDate > :lowerRange) AND " +
-                "(t.finishedDate < :upperRange)"
-    )
-    fun findTransactionsByFinishedDateRange(
-        lowerRange: Date,
-        upperRange: Date
-    ): MutableList<Transaction>
-
-    @Query(
-        "SELECT t FROM transaction t WHERE " +
-                "(t.amount > :lowerRange) AND " +
-                "(t.amount < :upperRange)"
-    )
-    fun findTransactionsByAmountRange(
-        lowerRange: Long,
-        upperRange: Long
-    ): MutableList<Transaction>
+//    @Query(
+//        "SELECT t FROM transaction t WHERE " +
+//                "(t.doneDate > :lowerRange) AND " +
+//                "(t.doneDate < :upperRange)"
+//    )
+//    fun findTransactionsByDoneDateRange(
+//        lowerRange: Date,
+//        upperRange: Date
+//    ): MutableList<Transaction>
+//
+//    @Query(
+//        "SELECT t FROM transaction t WHERE " +
+//                "(t.finishedDate > :lowerRange) AND " +
+//                "(t.finishedDate < :upperRange)"
+//    )
+//    fun findTransactionsByFinishedDateRange(
+//        lowerRange: Date,
+//        upperRange: Date
+//    ): MutableList<Transaction>
+//
+//    @Query(
+//        "SELECT t FROM transaction t WHERE " +
+//                "(t.amount > :lowerRange) AND " +
+//                "(t.amount < :upperRange)"
+//    )
+//    fun findTransactionsByAmountRange(
+//        lowerRange: Long,
+//        upperRange: Long
+//    ): MutableList<Transaction>
 
 }

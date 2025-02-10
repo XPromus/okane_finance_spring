@@ -17,7 +17,7 @@ interface OwnerRepository : JpaRepository<Owner, UUID> {
                 "(:lastName IS NULL OR o.lastName = :lastName) AND" +
                 "(:birthday IS NULL OR o.birthday = :birthday)"
     )
-    fun findAllByIdAndFirstNameAndLastNameAndBirthday(
+    fun findOwnersByFields(
         id: UUID?,
         firstName: String?,
         lastName: String?,

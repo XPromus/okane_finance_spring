@@ -12,7 +12,7 @@ import java.util.*
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
-    private val ownerService: OwnerService
+    private val ownerService: OwnerService,
 ) {
 
     fun getAccountById(id: UUID): Account {
@@ -22,11 +22,7 @@ class AccountService(
     }
 
     fun getAllAccounts(id: UUID?, accountName: String?): List<Account> {
-        if ((id ?: accountName) != null) {
-            return accountRepository.findAccountsByIdAndAccountName(id, accountName)
-        }
-
-        return accountRepository.findAll()
+        return accountRepository.findBudgetsByFields(id, accountName)
     }
 
     fun createAccount(accountDto: AccountDto): Account {

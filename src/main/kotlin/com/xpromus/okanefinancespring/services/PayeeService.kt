@@ -11,7 +11,7 @@ import java.util.*
 
 @Service
 class PayeeService(
-    private val payeeRepository: PayeeRepository
+    private val payeeRepository: PayeeRepository,
 ) {
     fun getPayeeById(id: UUID): Payee {
         return payeeRepository.findById(id).orElseGet {
@@ -20,11 +20,7 @@ class PayeeService(
     }
 
     fun getAllPayees(id: UUID?, payeeName: String?): List<Payee> {
-        if ((id ?: payeeName) != null) {
-            return payeeRepository.findPayeeByParameters(id, payeeName)
-        }
-
-        return payeeRepository.findAll()
+        return payeeRepository.findPayeesByFields(id, payeeName)
     }
 
     fun createPayee(payeeDto: PayeeDto): Payee {

@@ -1,7 +1,6 @@
 package com.xpromus.okanefinancespring.services
 
 import com.xpromus.okanefinancespring.dto.TagDto
-import com.xpromus.okanefinancespring.entities.Account
 import com.xpromus.okanefinancespring.entities.Tag
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.mapper.convertTagDtoToTag
@@ -12,7 +11,7 @@ import java.util.*
 
 @Service
 class TagService(
-    private val tagRepository: TagRepository
+    private val tagRepository: TagRepository,
 ) {
 
     fun getTagById(id: UUID): Tag {
@@ -22,11 +21,7 @@ class TagService(
     }
 
     fun getAllTags(id: UUID?, tagName: String?): List<Tag> {
-        if ((id ?: tagName) != null) {
-            return tagRepository.findTagsByIdAndTagName(id, tagName)
-        }
-
-        return tagRepository.findAll()
+        return tagRepository.findTagsByFields(id, tagName)
     }
 
     fun createTag(tagDto: TagDto): Tag {

@@ -11,7 +11,7 @@ import java.util.*
 
 @Service
 class OwnerService(
-    private val ownerRepository: OwnerRepository
+    private val ownerRepository: OwnerRepository,
 ) {
 
     fun getOwnerById(id: UUID): Owner {
@@ -26,13 +26,9 @@ class OwnerService(
         lastName: String?,
         birthday: Date?,
     ): List<Owner> {
-        if ((id ?: firstName ?: lastName ?: birthday) != null) {
-            return ownerRepository.findAllByIdAndFirstNameAndLastNameAndBirthday(
-                id, firstName, lastName, birthday
-            )
-        }
-
-        return ownerRepository.findAll()
+        return ownerRepository.findOwnersByFields(
+            id, firstName, lastName, birthday
+        )
     }
 
     fun createOwner(ownerDto: OwnerDto): Owner {
