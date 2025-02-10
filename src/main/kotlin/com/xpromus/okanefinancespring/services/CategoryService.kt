@@ -38,22 +38,6 @@ class CategoryService(
             categoryDto, categoryClasses
         )
 
-//        val targetBudget: Budget? = if (categoryDto.budgetId == null) {
-//            null
-//        } else {
-//            budgetService.getBudgetById(UUID.fromString(categoryDto.budgetId))
-//        }
-//        val parentCategory: Category? = if (categoryDto.parentCategoryId == null) {
-//            null
-//        } else {
-//            getCategoryById(UUID.fromString(categoryDto.parentCategoryId))
-//        }
-//        val childCategory: Category? = if (categoryDto.childCategoryId == null) {
-//            null
-//        } else {
-//            getCategoryById(UUID.fromString(categoryDto.childCategoryId))
-//        }
-
         return categoryRepository.save(categoryToBeAdded)
     }
 
@@ -73,22 +57,6 @@ class CategoryService(
         val updatedCategory = convertCategoryDtoToCategory(
             categoryDto, categoryClasses
         )
-
-//        val targetBudget: Budget? = if (categoryDto.budgetId == null) {
-//            null
-//        } else {
-//            budgetService.getBudgetById(UUID.fromString(categoryDto.budgetId))
-//        }
-//        val parentCategory: Category? = if (categoryDto.parentCategoryId == null) {
-//            null
-//        } else {
-//            getCategoryById(UUID.fromString(categoryDto.parentCategoryId))
-//        }
-//        val childCategory: Category? = if (categoryDto.childCategoryId == null) {
-//            null
-//        } else {
-//            getCategoryById(UUID.fromString(categoryDto.childCategoryId))
-//        }
 
         return categoryRepository.findById(id).map {
             val save = categoryRepository.save(

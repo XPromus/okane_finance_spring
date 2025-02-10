@@ -36,12 +36,6 @@ class TransactionService(
         isRecurring: Boolean?,
         recurringDate: Date?
     ): List<Transaction> {
-//        if ((id ?: transactionName) != null) {
-//            return transactionRepository.findTransactionByIdAndTransactionName(id, transactionName)
-//        }
-//
-//        return transactionRepository.findAll()
-
         return transactionRepository.findTransactionsByFields(
             id,
             transactionName,
