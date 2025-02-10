@@ -4,6 +4,11 @@ plugins {
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.asciidoctor.jvm.convert") version "3.3.2"
+	id("org.jetbrains.kotlin.plugin.allopen") version "2.1.10"
+}
+
+allOpen {
+	annotation("jakarta.persistence.Entity")
 }
 
 group = "com.xpromus"
