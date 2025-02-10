@@ -11,11 +11,21 @@ interface TransactionRepository : JpaRepository<Transaction, UUID> {
     @Query(
         "SELECT t FROM transaction t WHERE " +
                 "(:id IS NULL OR t.id = :id) AND " +
-                "(:transactionName IS NULL OR t.transactionName = :transactionName)"
+                "(:transactionName IS NULL OR t.transactionName = :transactionName) AND" +
+                "(:doneDate IS NULL OR t.doneDate = :doneDate) AND" +
+                "(:finishedDate IS NULL OR t.finishedDate = :finishedDate) AND" +
+                "(:amount IS NULL OR t.amount = :amount) AND" +
+                "(:isRecurring IS NULL OR t.isRecurring = :isRecurring) AND" +
+                "(:recurringDate IS NULL OR t.recurringDate = :recurringDate)"
     )
-    fun findTransactionByIdAndTransactionName(
+    fun findTransactionsByFields(
         id: UUID?,
-        transactionName: String?
+        transactionName: String?,
+        doneDate: Date?,
+        finishedDate: Date?,
+        amount: Long?,
+        isRecurring: Boolean?,
+        recurringDate: Date?
     ): MutableList<Transaction>
 
     @Query(

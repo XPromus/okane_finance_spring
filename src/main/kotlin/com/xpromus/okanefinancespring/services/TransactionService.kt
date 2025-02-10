@@ -1,5 +1,6 @@
 package com.xpromus.okanefinancespring.services
 
+import com.xpromus.okanefinancespring.dto.TransactionClasses
 import com.xpromus.okanefinancespring.dto.TransactionDto
 import com.xpromus.okanefinancespring.entities.Category
 import com.xpromus.okanefinancespring.entities.Tag
@@ -26,28 +27,42 @@ class TransactionService(
         }
     }
 
-    fun getAllTransactions(id: UUID?, transactionName: String?): List<Transaction> {
-        if ((id ?: transactionName) != null) {
-            return transactionRepository.findTransactionByIdAndTransactionName(id, transactionName)
-        }
+    fun getAllTransactions(
+        id: UUID?,
+        transactionName: String?,
+        doneDate: Date?,
+        finishedDate: Date?,
+        amount: Long?,
+        isRecurring: Boolean?,
+        recurringDate: Date?
+    ): List<Transaction> {
+//        if ((id ?: transactionName) != null) {
+//            return transactionRepository.findTransactionByIdAndTransactionName(id, transactionName)
+//        }
+//
+//        return transactionRepository.findAll()
 
-        return transactionRepository.findAll()
+        return transactionRepository.findTransactionsByFields(
+            id,
+            transactionName,
+            doneDate,
+            finishedDate,
+            amount,
+            isRecurring,
+            recurringDate
+        )
     }
 
     fun createTransaction(transactionDto: TransactionDto): Transaction {
-        val targetAccount = accountService.getAccountById(UUID.fromString(transactionDto.accountId))
-        val targetPayee = payeeService.getPayeeById(UUID.fromString(transactionDto.payeeId))
-        val targetCategory: Category? = if (transactionDto.categoryId == null) {
-            null
-        } else {
-            categoryService.getCategoryById(UUID.fromString(transactionDto.categoryId))
-        }
-        val targetTags: List<Tag> = transactionDto.tagIds.map {
-            tagService.getTagById(UUID.fromString(it))
-        }
+        val transactionClasses = getTransactionClasses(
+            transactionDto.accountId,
+            transactionDto.payeeId,
+            transactionDto.categoryId,
+            transactionDto.tagIds
+        )
 
         val transactionToBeAdded = covertTransactionDtoToTransaction(
-            transactionDto, targetAccount, targetPayee, targetCategory, targetTags
+            transactionDto, transactionClasses
         )
         return transactionRepository.save(transactionToBeAdded)
     }
@@ -59,19 +74,15 @@ class TransactionService(
     }
 
     fun updateTransaction(transactionDto: TransactionDto, id: UUID): Transaction {
-        val targetAccount = accountService.getAccountById(UUID.fromString(transactionDto.accountId))
-        val targetPayee = payeeService.getPayeeById(UUID.fromString(transactionDto.payeeId))
-        val targetCategory: Category? = if (transactionDto.categoryId == null) {
-            null
-        } else {
-            categoryService.getCategoryById(UUID.fromString(transactionDto.categoryId))
-        }
-        val targetTags: List<Tag> = transactionDto.tagIds.map {
-            tagService.getTagById(UUID.fromString(it))
-        }
+        val transactionClasses = getTransactionClasses(
+            transactionDto.accountId,
+            transactionDto.payeeId,
+            transactionDto.categoryId,
+            transactionDto.tagIds
+        )
 
         val updatedTransaction = covertTransactionDtoToTransaction(
-            transactionDto, targetAccount, targetPayee, targetCategory, targetTags
+            transactionDto, transactionClasses
         )
         return transactionRepository.findById(id).map {
             val save = transactionRepository.save(
@@ -81,6 +92,8 @@ class TransactionService(
                     doneDate = updatedTransaction.doneDate,
                     finishedDate = updatedTransaction.finishedDate,
                     amount = updatedTransaction.amount,
+                    isRecurring = updatedTransaction.isRecurring,
+                    recurringDate = updatedTransaction.recurringDate,
                     targetAccount = updatedTransaction.targetAccount,
                     targetPayee = updatedTransaction.targetPayee,
                     targetCategory = updatedTransaction.targetCategory,
@@ -93,12 +106,39 @@ class TransactionService(
                 doneDate = save.doneDate,
                 finishedDate = save.finishedDate,
                 amount = save.amount,
+                isRecurring = save.isRecurring,
+                recurringDate = save.recurringDate,
                 targetAccount = save.targetAccount,
                 targetPayee = save.targetPayee,
                 targetCategory = save.targetCategory,
                 targetTags = save.targetTags
             )
         }.orElseGet(null)
+    }
+
+    fun getTransactionClasses(
+        accountId: String,
+        payeeId: String,
+        categoryId: String?,
+        tagIds: List<String>
+    ): TransactionClasses {
+        val targetAccount = accountService.getAccountById(UUID.fromString(accountId))
+        val targetPayee = payeeService.getPayeeById(UUID.fromString(payeeId))
+        val targetCategory: Category? = if (categoryId == null) {
+            null
+        } else {
+            categoryService.getCategoryById(UUID.fromString(categoryId))
+        }
+        val targetTags: List<Tag> = tagIds.map {
+            tagService.getTagById(UUID.fromString(it))
+        }
+
+        return TransactionClasses(
+            account = targetAccount,
+            payee = targetPayee,
+            category = targetCategory,
+            tags = targetTags
+        )
     }
 
 }

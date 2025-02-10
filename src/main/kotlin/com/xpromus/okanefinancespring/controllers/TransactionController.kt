@@ -20,9 +20,19 @@ class TransactionController(
         @RequestParam(name = "transactionName", required = false) transactionName: String?,
         @RequestParam(name = "doneDate", required = false) doneDate: Date?,
         @RequestParam(name = "finishedDate", required = false) finishedDate: Date?,
-        @RequestParam(name = "amount", required = false) amount: Long?
+        @RequestParam(name = "amount", required = false) amount: Long?,
+        @RequestParam(name = "isRecurring", required = false) isRecurring: Boolean?,
+        @RequestParam(name = "recurringDate", required = false) recurringDate: Date?
     ): List<Transaction> {
-        return transactionService.getAllTransactions(id, transactionName)
+        return transactionService.getAllTransactions(
+            id,
+            transactionName,
+            doneDate,
+            finishedDate,
+            amount,
+            isRecurring,
+            recurringDate
+        )
     }
 
     @PostMapping

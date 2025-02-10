@@ -19,6 +19,10 @@ class Transaction(
     val finishedDate: Date? = Date(),
     @Column(nullable = false)
     val amount: Long = 0,
+    @Column(nullable = false)
+    val isRecurring: Boolean = false,
+    @Column(nullable = true)
+    val recurringDate: Date? = Date(),
 
     @ManyToOne
     @JsonBackReference
