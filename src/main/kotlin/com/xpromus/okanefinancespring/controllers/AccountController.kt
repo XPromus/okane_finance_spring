@@ -22,6 +22,25 @@ class AccountController(
         return accountService.getAllAccounts(id, accountName)
     }
 
+    @GetMapping("/{id}/expenses")
+    @ResponseStatus(HttpStatus.OK)
+    fun getAccountExpensesInDateRange(
+        @PathVariable id: UUID,
+        @RequestParam(name = "lowerDate", required = false) lowerDate: Date?,
+        @RequestParam(name = "upperDate", required = false) upperDate: Date?
+    ): Long {
+        return accountService.getExpensesOfAccountInDateRange(id, lowerDate, upperDate)
+    }
+
+    @GetMapping("/{id}/income")
+    fun getAccountIncomeInDateRange(
+        @PathVariable id: UUID,
+        @RequestParam(name = "lowerDate", required = false) lowerDate: Date?,
+        @RequestParam(name = "upperDate", required = false) upperDate: Date?
+    ): Long {
+        return accountService.getIncomeOfAccountInDateRange(id, lowerDate, upperDate)
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createAccount(@RequestBody accountDto: AccountDto): Account {

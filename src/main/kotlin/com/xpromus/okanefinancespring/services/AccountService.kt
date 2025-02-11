@@ -1,10 +1,13 @@
 package com.xpromus.okanefinancespring.services
 
+import com.xpromus.okanefinancespring.calculations.getExpensesFromTransactions
+import com.xpromus.okanefinancespring.calculations.getIncomeFromTransactions
 import com.xpromus.okanefinancespring.dto.AccountDto
 import com.xpromus.okanefinancespring.entities.Account
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.mapper.convertAccountDtoToAccount
 import com.xpromus.okanefinancespring.repositories.AccountRepository
+import com.xpromus.okanefinancespring.repositories.TransactionRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
@@ -12,6 +15,7 @@ import java.util.*
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
+    private val transactionRepository: TransactionRepository,
     private val ownerService: OwnerService,
 ) {
 
@@ -19,6 +23,26 @@ class AccountService(
         return accountRepository.findById(id).orElseThrow {
             throw EntityNotFoundException("Account with id $id could not be found")
         }
+    }
+
+    fun getIncomeOfAccountInDateRange(id: UUID, lowerRange: Date?, upperRange: Date?): Long {
+        val targetAccount = getAccountById(id)
+        val transactions = transactionRepository.findTransactionsByFinishedDateRange(
+            targetAccount,
+            lowerRange,
+            upperRange
+        )
+        return getIncomeFromTransactions(transactions)
+    }
+
+    fun getExpensesOfAccountInDateRange(id: UUID, lowerRange: Date?, upperRange: Date?): Long {
+        val targetAccount = getAccountById(id)
+        val transactions = transactionRepository.findTransactionsByFinishedDateRange(
+            targetAccount,
+            lowerRange,
+            upperRange
+        )
+        return getExpensesFromTransactions(transactions)
     }
 
     fun getAllAccounts(id: UUID?, accountName: String?): List<Account> {

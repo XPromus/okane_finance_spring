@@ -1,5 +1,6 @@
 package com.xpromus.okanefinancespring.repositories
 
+import com.xpromus.okanefinancespring.entities.Account
 import com.xpromus.okanefinancespring.entities.Transaction
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -28,34 +29,36 @@ interface TransactionRepository : JpaRepository<Transaction, UUID> {
         recurringDate: Date?,
     ): MutableList<Transaction>
 
-//    @Query(
-//        "SELECT t FROM transaction t WHERE " +
-//                "(t.doneDate > :lowerRange) AND " +
-//                "(t.doneDate < :upperRange)"
-//    )
-//    fun findTransactionsByDoneDateRange(
-//        lowerRange: Date,
-//        upperRange: Date
-//    ): MutableList<Transaction>
-//
-//    @Query(
-//        "SELECT t FROM transaction t WHERE " +
-//                "(t.finishedDate > :lowerRange) AND " +
-//                "(t.finishedDate < :upperRange)"
-//    )
-//    fun findTransactionsByFinishedDateRange(
-//        lowerRange: Date,
-//        upperRange: Date
-//    ): MutableList<Transaction>
-//
-//    @Query(
-//        "SELECT t FROM transaction t WHERE " +
-//                "(t.amount > :lowerRange) AND " +
-//                "(t.amount < :upperRange)"
-//    )
-//    fun findTransactionsByAmountRange(
-//        lowerRange: Long,
-//        upperRange: Long
-//    ): MutableList<Transaction>
+    @Query(
+        "SELECT t FROM transaction t WHERE " +
+                "(t.doneDate > :lowerRange) AND " +
+                "(t.doneDate < :upperRange)"
+    )
+    fun findTransactionsByDoneDateRange(
+        lowerRange: Date,
+        upperRange: Date
+    ): MutableList<Transaction>
+
+    @Query(
+        "SELECT t FROM transaction t WHERE " +
+                "(:targetAccount IS NULL OR t.targetAccount = :targetAccount) AND" +
+                "(:lowerRange IS NULL OR t.finishedDate > :lowerRange) AND " +
+                "(:upperRange IS NULL OR t.finishedDate < :upperRange)"
+    )
+    fun findTransactionsByFinishedDateRange(
+        targetAccount: Account?,
+        lowerRange: Date?,
+        upperRange: Date?
+    ): MutableList<Transaction>
+
+    @Query(
+        "SELECT t FROM transaction t WHERE " +
+                "(t.amount > :lowerRange) AND " +
+                "(t.amount < :upperRange)"
+    )
+    fun findTransactionsByAmountRange(
+        lowerRange: Long,
+        upperRange: Long
+    ): MutableList<Transaction>
 
 }
