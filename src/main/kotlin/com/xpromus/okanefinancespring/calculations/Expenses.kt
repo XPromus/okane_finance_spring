@@ -1,6 +1,6 @@
 package com.xpromus.okanefinancespring.calculations
 
-import com.xpromus.okanefinancespring.entities.Transaction
+import com.xpromus.okanefinancespring.transactions.transaction.Transaction
 
 fun getExpensesFromTransactions(transactions: List<Transaction>): Long {
     return transactions.sumOf { if (it.amount < 0) it.amount else 0 }

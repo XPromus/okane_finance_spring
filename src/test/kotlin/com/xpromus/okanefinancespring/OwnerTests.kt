@@ -1,8 +1,8 @@
 package com.xpromus.okanefinancespring
 
-import com.xpromus.okanefinancespring.dto.OwnerDto
-import com.xpromus.okanefinancespring.mapper.convertOwnerDtoToOwner
-import com.xpromus.okanefinancespring.services.OwnerService
+import com.xpromus.okanefinancespring.owners.OwnerDto
+import com.xpromus.okanefinancespring.owners.convertOwnerDtoToOwner
+import com.xpromus.okanefinancespring.owners.OwnerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*

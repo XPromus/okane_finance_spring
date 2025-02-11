@@ -1,16 +1,13 @@
 package com.xpromus.okanefinancespring
 
-import com.xpromus.okanefinancespring.dto.AccountDto
-import com.xpromus.okanefinancespring.dto.OwnerDto
-import com.xpromus.okanefinancespring.dto.PayeeDto
-import com.xpromus.okanefinancespring.dto.TransactionDto
-import com.xpromus.okanefinancespring.entities.Transaction
-import com.xpromus.okanefinancespring.mapper.convertOwnerDtoToOwner
-import com.xpromus.okanefinancespring.repositories.TagRepository
-import com.xpromus.okanefinancespring.services.AccountService
-import com.xpromus.okanefinancespring.services.OwnerService
-import com.xpromus.okanefinancespring.services.PayeeService
-import com.xpromus.okanefinancespring.services.TransactionService
+import com.xpromus.okanefinancespring.accounts.AccountDto
+import com.xpromus.okanefinancespring.owners.OwnerDto
+import com.xpromus.okanefinancespring.payees.PayeeDto
+import com.xpromus.okanefinancespring.transactions.transaction.TransactionDto
+import com.xpromus.okanefinancespring.accounts.AccountService
+import com.xpromus.okanefinancespring.owners.OwnerService
+import com.xpromus.okanefinancespring.payees.PayeeService
+import com.xpromus.okanefinancespring.transactions.transaction.TransactionService
 import kotlin.test.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -52,9 +49,7 @@ class OverallTest @Autowired constructor (
             accountId = accountRequest.id.toString(),
             payeeId = payeeRequest.id.toString(),
             categoryId = null,
-            tagIds = emptyList(),
-            isRecurring = false,
-            recurringDate = null
+            tagIds = emptyList()
         )
         val transactionRequest = transactionService.createTransaction(transactionDto)
     }
