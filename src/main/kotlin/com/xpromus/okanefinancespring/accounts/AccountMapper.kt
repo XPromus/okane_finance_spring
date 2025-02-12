@@ -4,10 +4,11 @@ import com.xpromus.okanefinancespring.owners.Owner
 
 fun convertAccountDtoToAccount(
     accountDto: AccountDto,
-    owner: Owner
+    owner: Owner,
 ): Account {
     return Account(
         accountName = accountDto.accountName,
-        owner = owner
+        startingBalance = accountDto.startingBalance,
+        owner = owner,
     )
 }

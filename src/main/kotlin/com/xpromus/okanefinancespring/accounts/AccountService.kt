@@ -42,8 +42,8 @@ class AccountService(
         return getExpensesFromTransactions(transactions)
     }
 
-    fun getAllAccounts(id: UUID?, accountName: String?): List<Account> {
-        return accountRepository.findBudgetsByFields(id, accountName)
+    fun getAllAccounts(id: UUID?, accountName: String?, startingBalance: Long?): List<Account> {
+        return accountRepository.findBudgetsByFields(id, accountName, startingBalance)
     }
 
     fun createAccount(accountDto: AccountDto): Account {

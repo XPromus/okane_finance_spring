@@ -14,6 +14,8 @@ class Account(
     val id: UUID? = null,
     @Column(name = "accountName")
     val accountName: String = "",
+    @Column(name = "startingBalance")
+    val startingBalance: Long = 0,
     @OneToMany(
         mappedBy = "targetAccount",
         cascade = [CascadeType.REMOVE],
