@@ -42,8 +42,8 @@ class AccountService(
         return getExpensesFromTransactions(transactions)
     }
 
-    fun getAllAccounts(id: UUID?, accountName: String?, startingBalance: Long?): List<Account> {
-        return accountRepository.findBudgetsByFields(id, accountName, startingBalance)
+    fun getAllAccounts(id: UUID?, accountName: String?, startingBalance: Long?, institute: String?): List<Account> {
+        return accountRepository.findBudgetsByFields(id, accountName, startingBalance, institute)
     }
 
     fun createAccount(accountDto: AccountDto): Account {
@@ -65,6 +65,8 @@ class AccountService(
                 Account(
                     id = it.id,
                     accountName = accountDto.accountName,
+                    startingBalance = accountDto.startingBalance,
+                    institute = accountDto.institute,
                     transactions = it.transactions,
                     owner = ownerService.getOwnerById(UUID.fromString(accountDto.ownerId))
                 )
@@ -72,6 +74,8 @@ class AccountService(
             Account(
                 id = save.id,
                 accountName = save.accountName,
+                startingBalance = save.startingBalance,
+                institute = save.institute,
                 transactions = save.transactions,
                 owner = save.owner
             )

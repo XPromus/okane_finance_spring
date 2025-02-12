@@ -9,6 +9,7 @@ fun convertAccountDtoToAccount(
     return Account(
         accountName = accountDto.accountName,
         startingBalance = accountDto.startingBalance,
+        institute = accountDto.institute,
         owner = owner,
     )
 }
