@@ -1,6 +1,7 @@
 package com.xpromus.okanefinancespring.accounts
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.xpromus.okanefinancespring.institute.Institute
 import com.xpromus.okanefinancespring.owners.Owner
 import com.xpromus.okanefinancespring.transactions.transaction.Transaction
 import jakarta.persistence.*
@@ -16,8 +17,12 @@ class Account(
     val accountName: String = "",
     @Column(name = "startingBalance")
     val startingBalance: Long = 0,
-    @Column(name = "institute")
-    val institute: String = "",
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "institute_id")
+    val institute: Institute = Institute(),
+
     @OneToMany(
         mappedBy = "targetAccount",
         cascade = [CascadeType.REMOVE],
@@ -25,6 +30,7 @@ class Account(
         fetch = FetchType.LAZY
     )
     val transactions: List<Transaction> = emptyList(),
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "owner_id")

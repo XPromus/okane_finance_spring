@@ -15,10 +15,9 @@ class AccountController(
     fun getAccounts(
         @RequestParam(name = "id", required = false) id: UUID?,
         @RequestParam(name = "accountName", required = false) accountName: String?,
-        @RequestParam(name = "startingBalance", required = false) startingBalance: Long?,
-        @RequestParam(name = "institute", required = false) institute: String?
+        @RequestParam(name = "startingBalance", required = false) startingBalance: Long?
     ): List<Account> {
-        return accountService.getAllAccounts(id, accountName, startingBalance, institute)
+        return accountService.getAllAccounts(id, accountName, startingBalance)
     }
 
     @GetMapping("/{id}/expenses")

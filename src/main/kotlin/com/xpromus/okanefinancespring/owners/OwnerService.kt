@@ -48,7 +48,8 @@ class OwnerService(
                     firstName = ownerDto.firstName,
                     lastName = ownerDto.lastName,
                     birthday = ownerDto.birthday,
-                    accounts = it.accounts
+                    accounts = it.accounts,
+                    depots = it.depots
                 )
             )
             Owner(
@@ -56,7 +57,8 @@ class OwnerService(
                 firstName = save.firstName,
                 lastName = save.lastName,
                 birthday = save.birthday,
-                accounts = save.accounts
+                accounts = save.accounts,
+                depots = save.depots
             )
         }.orElseGet(null)
     }

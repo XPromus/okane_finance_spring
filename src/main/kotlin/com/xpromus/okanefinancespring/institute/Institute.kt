@@ -1,33 +1,27 @@
-package com.xpromus.okanefinancespring.owners
+package com.xpromus.okanefinancespring.institute
 
 import com.xpromus.okanefinancespring.accounts.Account
 import com.xpromus.okanefinancespring.stocks.depot.Depot
-import com.xpromus.okanefinancespring.stocks.taxexemption.entry.TaxExemptionEntry
 import jakarta.persistence.*
-import java.util.Date
 import java.util.UUID
 
-@Entity(name = "owner")
-@Table(name = "owner")
-class Owner(
+@Entity(name = "institute")
+@Table(name = "institute")
+class Institute (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
-    @Column(name = "firstName", nullable = false)
-    val firstName: String = "",
-    @Column(name = "lastName", nullable = false)
-    val lastName: String = "",
-    @Column(name = "birthday", nullable = true)
-    val birthday: Date? = Date(),
+    @Column(name = "name", nullable = false)
+    val name: String = "",
     @OneToMany(
-        mappedBy = "owner",
+        mappedBy = "institute",
         cascade = [CascadeType.REMOVE],
         orphanRemoval = false,
         fetch = FetchType.LAZY
     )
     val accounts: List<Account> = emptyList(),
     @OneToMany(
-        mappedBy = "owner",
+        mappedBy = "institute",
         cascade = [CascadeType.REMOVE],
         orphanRemoval = false,
         fetch = FetchType.LAZY

@@ -4,5 +4,5 @@ data class AccountDto(
     val accountName: String = "",
     val ownerId: String = "",
     val startingBalance: Long = 0,
-    val institute: String = "",
+    val instituteId: String = "",
 )
