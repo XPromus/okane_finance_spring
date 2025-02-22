@@ -50,14 +50,16 @@ class DepotService(
                     id = it.id,
                     owner = ownerService.getOwnerById(UUID.fromString(depotDto.ownerId)),
                     institute = instituteService.getInstituteById(UUID.fromString(depotDto.instituteId)),
-                    taxExemptionEntry = it.taxExemptionEntry
+                    taxExemptionEntry = it.taxExemptionEntry,
+                    stockOrders = it.stockOrders
                 )
             )
             Depot(
                 id = save.id,
                 owner = save.owner,
                 institute = save.institute,
-                taxExemptionEntry = save.taxExemptionEntry
+                taxExemptionEntry = save.taxExemptionEntry,
+                stockOrders = save.stockOrders
             )
         }.orElseGet(null)
     }
