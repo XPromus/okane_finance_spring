@@ -7,7 +7,7 @@ fun convertTaxExemptionEntryDtoToTaxExemptionEntry(
     depot: Depot
 ): TaxExemptionEntry {
     return TaxExemptionEntry(
-        value = taxExemptionEntryDto.value,
+        taxValue = taxExemptionEntryDto.value,
         depot = depot
     )
 }

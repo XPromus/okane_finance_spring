@@ -10,8 +10,8 @@ class TaxExemptionEntry (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
-    @Column(name = "value")
-    val value: Int = 0,
+    @Column(name = "tax_value")
+    val taxValue: Int = 0,
     @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinColumn(name = "depot_id", referencedColumnName = "id")
     val depot: Depot = Depot()

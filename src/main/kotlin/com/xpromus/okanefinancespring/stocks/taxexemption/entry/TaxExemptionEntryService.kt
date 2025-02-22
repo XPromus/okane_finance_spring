@@ -48,13 +48,13 @@ class TaxExemptionEntryService(
             val save = taxExemptionEntryRepository.save(
                 TaxExemptionEntry(
                     id = it.id,
-                    value = taxExemptionEntryDto.value,
+                    taxValue = taxExemptionEntryDto.value,
                     depot = depotService.getDepotById(UUID.fromString(taxExemptionEntryDto.depotId))
                 )
             )
             TaxExemptionEntry(
                 id = save.id,
-                value = save.value,
+                taxValue = save.taxValue,
                 depot = save.depot
             )
         }.orElseGet(null)
