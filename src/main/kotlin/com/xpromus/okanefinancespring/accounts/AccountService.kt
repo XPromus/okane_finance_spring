@@ -48,16 +48,17 @@ class AccountService(
         id: UUID?,
         accountName: String?,
         startingBalance: Long?
-    ): List<Account> {
-        return accountRepository.findBudgetsByFields(id, accountName, startingBalance)
+    ): List<AccountDto> {
+        val accountsToReturn: List<Account> = accountRepository.findBudgetsByFields(id, accountName, startingBalance)
+        return accountsToReturn.map { convertAccountToAccountDto(it) }
     }
 
-    fun createAccount(accountDto: AccountDto): Account {
+    fun createAccount(accountDto: AccountDto): UUID {
         val accountInstitute = instituteService.getInstituteById(UUID.fromString(accountDto.instituteId))
         val accountOwner = ownerService.getOwnerById(UUID.fromString(accountDto.ownerId))
         val accountToSave = convertAccountDtoToAccount(accountDto, accountInstitute, accountOwner)
-
-        return accountRepository.save(accountToSave)
+        val savedAccount = accountRepository.save(accountToSave)
+        return savedAccount.id!!
     }
 
     @Transactional
@@ -66,7 +67,7 @@ class AccountService(
         accountRepository.delete(toDeleteAccount)
     }
 
-    fun updateAccount(accountDto: AccountDto, id: UUID): Account {
+    fun updateAccount(accountDto: AccountDto, id: UUID): AccountDto {
         return accountRepository.findById(id).map {
             val save = accountRepository.save(
                 Account(
@@ -78,14 +79,7 @@ class AccountService(
                     owner = ownerService.getOwnerById(UUID.fromString(accountDto.ownerId))
                 )
             )
-            Account(
-                id = save.id,
-                accountName = save.accountName,
-                startingBalance = save.startingBalance,
-                institute = save.institute,
-                transactions = save.transactions,
-                owner = save.owner
-            )
+            convertAccountToAccountDto(save)
         }.orElseGet(null)
     }
 

@@ -16,7 +16,7 @@ class AccountController(
         @RequestParam(name = "id", required = false) id: UUID?,
         @RequestParam(name = "accountName", required = false) accountName: String?,
         @RequestParam(name = "startingBalance", required = false) startingBalance: Long?
-    ): List<Account> {
+    ): List<AccountDto> {
         return accountService.getAllAccounts(id, accountName, startingBalance)
     }
 
@@ -41,7 +41,7 @@ class AccountController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createAccount(@RequestBody accountDto: AccountDto): Account {
+    fun createAccount(@RequestBody accountDto: AccountDto): UUID {
         return accountService.createAccount(accountDto)
     }
 
@@ -58,7 +58,7 @@ class AccountController(
     fun updateAccount(
         @PathVariable id: UUID,
         @RequestBody accountDto: AccountDto,
-    ): Account {
+    ): AccountDto {
         return accountService.updateAccount(accountDto, id)
     }
 

@@ -15,3 +15,14 @@ fun convertAccountDtoToAccount(
         owner = owner,
     )
 }
+
+fun convertAccountToAccountDto(account: Account): AccountDto {
+    return AccountDto(
+        id = account.id.toString(),
+        accountName = account.accountName,
+        startingBalance = account.startingBalance,
+        instituteId = account.institute.id.toString(),
+        transactionIds = account.transactions.map { it.id.toString() },
+        ownerId = account.owner.id.toString()
+    )
+}

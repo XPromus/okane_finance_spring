@@ -17,7 +17,7 @@ class OwnerController(
         @RequestParam(name = "firstName", required = false) firstName: String?,
         @RequestParam(name = "lastName", required = false) lastName: String?,
         @RequestParam(name = "birthday", required = false) birthday: Date?,
-    ): List<Owner> {
+    ): List<OwnerDto> {
         return ownerService.getAllOwners(id, firstName, lastName, birthday)
     }
 
@@ -25,7 +25,7 @@ class OwnerController(
     @ResponseStatus(HttpStatus.CREATED)
     fun createOwner(
         @RequestBody ownerDto: OwnerDto,
-    ): Owner {
+    ): UUID {
         return ownerService.createOwner(ownerDto)
     }
 
@@ -42,7 +42,7 @@ class OwnerController(
     fun updateOwner(
         @PathVariable id: UUID,
         @RequestBody ownerDto: OwnerDto,
-    ): Owner {
+    ): OwnerDto {
         return ownerService.updateOwner(ownerDto, id)
     }
 

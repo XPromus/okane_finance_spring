@@ -24,14 +24,16 @@ class OwnerService(
         firstName: String?,
         lastName: String?,
         birthday: Date?,
-    ): List<Owner> {
-        return ownerRepository.findOwnersByFields(
+    ): List<OwnerDto> {
+        val ownersToReturn = ownerRepository.findOwnersByFields(
             id, firstName, lastName, birthday
         )
+        return ownersToReturn.map { convertOwnerToOwnerDto(it) }
     }
 
-    fun createOwner(ownerDto: OwnerDto): Owner {
-        return ownerRepository.save(convertOwnerDtoToOwner(ownerDto))
+    fun createOwner(ownerDto: OwnerDto): UUID {
+        val savedOwner = ownerRepository.save(convertOwnerDtoToOwner(ownerDto))
+        return savedOwner.id!!
     }
 
     @Transactional
@@ -40,7 +42,7 @@ class OwnerService(
         ownerRepository.delete(toDeleteOwner)
     }
 
-    fun updateOwner(ownerDto: OwnerDto, id: UUID): Owner {
+    fun updateOwner(ownerDto: OwnerDto, id: UUID): OwnerDto {
         return ownerRepository.findById(id).map {
             val save = ownerRepository.save(
                 Owner(
@@ -52,14 +54,7 @@ class OwnerService(
                     depots = it.depots
                 )
             )
-            Owner(
-                id = save.id,
-                firstName = save.firstName,
-                lastName = save.lastName,
-                birthday = save.birthday,
-                accounts = save.accounts,
-                depots = save.depots
-            )
+            convertOwnerToOwnerDto(save)
         }.orElseGet(null)
     }
 
