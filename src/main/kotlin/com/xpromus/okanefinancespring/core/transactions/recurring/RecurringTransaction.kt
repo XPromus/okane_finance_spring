@@ -1,5 +1,6 @@
 package com.xpromus.okanefinancespring.core.transactions.recurring
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okanefinancespring.core.accounts.Account
 import com.xpromus.okanefinancespring.core.payees.Payee
 import com.xpromus.okanefinancespring.core.sorting.categories.Category
@@ -32,12 +33,15 @@ class RecurringTransaction(
     val recurringUntil: Date? = null,
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "account_id")
     val targetAccount: Account = Account(),
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "payee_id")
     val targetPayee: Payee = Payee(),
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "category_id")
     val targetCategory: Category? = Category(),
     @ManyToMany

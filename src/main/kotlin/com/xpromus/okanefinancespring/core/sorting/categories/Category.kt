@@ -1,5 +1,6 @@
 package com.xpromus.okanefinancespring.core.sorting.categories
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okanefinancespring.core.budgets.Budget
 import com.xpromus.okanefinancespring.core.transactions.transaction.Transaction
 import jakarta.persistence.*
@@ -21,12 +22,15 @@ class Category(
     )
     val transactions: List<Transaction> = emptyList(),
     @OneToOne
+    @JsonBackReference
     @JoinColumn(name = "parentCategory_id", referencedColumnName = "id")
     var parentCategory: Category? = null,
     @OneToOne
+    @JsonBackReference
     @JoinColumn(name = "childCategory_id", referencedColumnName = "id")
     var childCategory: Category? = null,
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "budget_id")
     var targetBudget: Budget? = null
 )

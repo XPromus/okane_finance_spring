@@ -1,5 +1,6 @@
 package com.xpromus.okanefinancespring.core.accounts
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okanefinancespring.core.institute.Institute
 import com.xpromus.okanefinancespring.core.owners.Owner
 import com.xpromus.okanefinancespring.core.transactions.transaction.Transaction
@@ -18,6 +19,7 @@ class Account(
     val startingBalance: Long = 0,
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "institute_id")
     val institute: Institute = Institute(),
 
@@ -30,6 +32,7 @@ class Account(
     val transactions: List<Transaction> = emptyList(),
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "owner_id")
     val owner: Owner = Owner()
 )

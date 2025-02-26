@@ -1,5 +1,6 @@
 package com.xpromus.okanefinancespring.core.sorting.tags
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okanefinancespring.core.transactions.transaction.Transaction
 import jakarta.persistence.*
 import java.util.*
@@ -12,6 +13,7 @@ class Tag(
     val id: UUID? = null,
     @Column(nullable = false)
     val tagName: String = "",
+    @JsonBackReference
     @ManyToMany(mappedBy = "targetTags")
     val transactions: List<Transaction> = emptyList()
 )

@@ -1,5 +1,6 @@
 package com.xpromus.okanefinancespring.core.transactions.transaction
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.xpromus.okanefinancespring.core.accounts.Account
 import com.xpromus.okanefinancespring.core.payees.Payee
@@ -24,15 +25,15 @@ class Transaction(
     val amount: Long = 0,
 
     @ManyToOne
-    @JsonIgnoreProperties("transaction")
+    @JsonBackReference
     @JoinColumn(name = "account_id")
     val targetAccount: Account = Account(),
     @ManyToOne
-    @JsonIgnoreProperties("transaction")
+    @JsonBackReference
     @JoinColumn(name = "payee_id")
     val targetPayee: Payee = Payee(),
     @ManyToOne
-    @JsonIgnoreProperties("transaction")
+    @JsonBackReference
     @JoinColumn(name = "category_id")
     val targetCategory: Category? = Category(),
     @ManyToMany
@@ -41,6 +42,5 @@ class Transaction(
         joinColumns = [JoinColumn(name = "transaction_id")],
         inverseJoinColumns = [JoinColumn(name = "tag_id")]
     )
-    @JsonIgnoreProperties("transaction_tag")
     val targetTags: List<Tag> = emptyList(),
 )
