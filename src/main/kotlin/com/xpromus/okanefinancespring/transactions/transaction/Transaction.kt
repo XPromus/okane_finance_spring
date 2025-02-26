@@ -1,5 +1,6 @@
 package com.xpromus.okanefinancespring.transactions.transaction
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.xpromus.okanefinancespring.accounts.Account
 import com.xpromus.okanefinancespring.payees.Payee
 import com.xpromus.okanefinancespring.sorting.categories.Category
@@ -23,12 +24,15 @@ class Transaction(
     val amount: Long = 0,
 
     @ManyToOne
+    @JsonIgnoreProperties("transaction")
     @JoinColumn(name = "account_id")
     val targetAccount: Account = Account(),
     @ManyToOne
+    @JsonIgnoreProperties("transaction")
     @JoinColumn(name = "payee_id")
     val targetPayee: Payee = Payee(),
     @ManyToOne
+    @JsonIgnoreProperties("transaction")
     @JoinColumn(name = "category_id")
     val targetCategory: Category? = Category(),
     @ManyToMany
@@ -37,5 +41,6 @@ class Transaction(
         joinColumns = [JoinColumn(name = "transaction_id")],
         inverseJoinColumns = [JoinColumn(name = "tag_id")]
     )
+    @JsonIgnoreProperties("transaction_tag")
     val targetTags: List<Tag> = emptyList(),
 )
