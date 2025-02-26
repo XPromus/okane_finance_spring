@@ -2,7 +2,7 @@ package com.xpromus.okanefinancespring
 
 import com.xpromus.okanefinancespring.owners.OwnerDto
 import com.xpromus.okanefinancespring.owners.convertOwnerDtoToOwner
-import com.xpromus.okanefinancespring.owners.OwnerService
+import com.xpromus.okanefinancespring.core.owners.OwnerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 class OwnerTests {
 
     @Autowired
-    private lateinit var ownerService: OwnerService
+    private lateinit var ownerService: com.xpromus.okanefinancespring.core.owners.OwnerService
 
     @Test
     fun `should create owner and return it`() {

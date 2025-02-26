@@ -1,7 +1,7 @@
 package com.xpromus.okanefinancespring.stocks.depot
 
-import com.xpromus.okanefinancespring.institute.Institute
-import com.xpromus.okanefinancespring.owners.Owner
+import com.xpromus.okanefinancespring.core.institute.Institute
+import com.xpromus.okanefinancespring.core.owners.Owner
 import com.xpromus.okanefinancespring.stocks.order.StockOrder
 import com.xpromus.okanefinancespring.stocks.taxexemption.entry.TaxExemptionEntry
 import jakarta.persistence.*

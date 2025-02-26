@@ -1,12 +1,12 @@
 package com.xpromus.okanefinancespring.stocks.depot
 
+import com.xpromus.okanefinancespring.core.institute.InstituteService
+import com.xpromus.okanefinancespring.core.owners.OwnerService
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
-import com.xpromus.okanefinancespring.institute.InstituteService
-import com.xpromus.okanefinancespring.owners.OwnerService
 import com.xpromus.okanefinancespring.util.getEntityNotFoundExceptionMessage
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class DepotService(

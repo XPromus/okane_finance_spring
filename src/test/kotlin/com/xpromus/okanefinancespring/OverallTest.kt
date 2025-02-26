@@ -2,10 +2,10 @@ package com.xpromus.okanefinancespring
 
 import com.xpromus.okanefinancespring.accounts.AccountDto
 import com.xpromus.okanefinancespring.owners.OwnerDto
-import com.xpromus.okanefinancespring.payees.PayeeDto
-import com.xpromus.okanefinancespring.transactions.transaction.TransactionDto
+import com.xpromus.okanefinancespring.core.payees.PayeeDto
+import com.xpromus.okanefinancespring.core.transactions.transaction.TransactionDto
 import com.xpromus.okanefinancespring.accounts.AccountService
-import com.xpromus.okanefinancespring.owners.OwnerService
+import com.xpromus.okanefinancespring.core.owners.OwnerService
 import com.xpromus.okanefinancespring.payees.PayeeService
 import com.xpromus.okanefinancespring.transactions.transaction.TransactionService
 import kotlin.test.Test
@@ -15,7 +15,7 @@ import java.util.*
 
 @SpringBootTest
 class OverallTest @Autowired constructor (
-    val ownerService: OwnerService,
+    val ownerService: com.xpromus.okanefinancespring.core.owners.OwnerService,
     val accountService: AccountService,
     val payeeService: PayeeService,
     val transactionService: TransactionService
@@ -36,12 +36,12 @@ class OverallTest @Autowired constructor (
         )
         val accountRequest = accountService.createAccount(accountDto)
 
-        val payeeDto = PayeeDto(
+        val payeeDto = com.xpromus.okanefinancespring.core.payees.PayeeDto(
             payeeName = "Dieter"
         )
         val payeeRequest = payeeService.createPayee(payeeDto)
 
-        val transactionDto = TransactionDto(
+        val transactionDto = com.xpromus.okanefinancespring.core.transactions.transaction.TransactionDto(
             transactionName = "Auto",
             doneDate = Date(),
             finishedDate = Date(),
