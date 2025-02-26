@@ -11,11 +11,15 @@ interface AccountRepository : JpaRepository<Account, UUID> {
         "SELECT a FROM account a WHERE " +
                 "(:id IS NULL OR a.id = :id) AND" +
                 "(:accountName IS NULL OR a.accountName = :accountName) AND " +
-                "(:startingBalance IS NULL OR a.startingBalance = :startingBalance)"
+                "(:startingBalance IS NULL OR a.startingBalance = :startingBalance) AND " +
+                "(:instituteID IS NULL OR a.institute.id = :instituteID) AND " +
+                "(:ownerID IS NULL OR a.owner.id = :ownerID)"
     )
     fun findBudgetsByFields(
         id: UUID?,
         accountName: String?,
-        startingBalance: Long?
+        startingBalance: Long?,
+        instituteID: UUID?,
+        ownerID: UUID?
     ): MutableList<Account>
 }

@@ -1,10 +1,13 @@
 package com.xpromus.okanefinancespring.core.accounts
 
-import com.xpromus.okanefinancespring.util.calculations.getExpensesFromTransactions
-import com.xpromus.okanefinancespring.util.calculations.getIncomeFromTransactions
+import com.xpromus.okanefinancespring.core.accounts.dtos.CreateAccountDto
+import com.xpromus.okanefinancespring.core.accounts.dtos.EditAccountDto
+import com.xpromus.okanefinancespring.core.accounts.dtos.GetAccountDto
+import com.xpromus.okanefinancespring.core.accounts.mapper.*
+import com.xpromus.okanefinancespring.core.institute.Institute
 import com.xpromus.okanefinancespring.core.institute.InstituteService
+import com.xpromus.okanefinancespring.core.owners.Owner
 import com.xpromus.okanefinancespring.core.owners.OwnerService
-import com.xpromus.okanefinancespring.core.transactions.transaction.TransactionRepository
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -13,7 +16,6 @@ import java.util.*
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
-    private val transactionRepository: TransactionRepository,
     private val ownerService: OwnerService,
     private val instituteService: InstituteService
 ) {
@@ -24,63 +26,52 @@ class AccountService(
         }
     }
 
-    fun getIncomeOfAccountInDateRange(id: UUID, lowerRange: Date?, upperRange: Date?): Long {
-        val targetAccount = getAccountById(id)
-        val transactions = transactionRepository.findTransactionsByFinishedDateRange(
-            targetAccount,
-            lowerRange,
-            upperRange
-        )
-        return getIncomeFromTransactions(transactions)
-    }
-
-    fun getExpensesOfAccountInDateRange(id: UUID, lowerRange: Date?, upperRange: Date?): Long {
-        val targetAccount = getAccountById(id)
-        val transactions = transactionRepository.findTransactionsByFinishedDateRange(
-            targetAccount,
-            lowerRange,
-            upperRange
-        )
-        return getExpensesFromTransactions(transactions)
-    }
-
     fun getAllAccounts(
         id: UUID?,
         accountName: String?,
-        startingBalance: Long?
-    ): List<AccountDto> {
-        val accountsToReturn: List<Account> = accountRepository.findBudgetsByFields(id, accountName, startingBalance)
-        return accountsToReturn.map { convertAccountToAccountDto(it) }
+        startingBalance: Long?,
+        instituteID: UUID?,
+        ownerID: UUID?
+    ): List<GetAccountDto> {
+        val accountsToReturn: List<Account> = accountRepository.findBudgetsByFields(
+            id, accountName, startingBalance, instituteID, ownerID
+        )
+        return accountsToReturn.map { toGetAccountDto(it) }
     }
 
-    fun createAccount(accountDto: AccountDto): UUID {
-        val accountInstitute = instituteService.getInstituteById(UUID.fromString(accountDto.instituteId))
-        val accountOwner = ownerService.getOwnerById(UUID.fromString(accountDto.ownerId))
-        val accountToSave = convertAccountDtoToAccount(accountDto, accountInstitute, accountOwner)
+    fun createAccount(createAccountDto: CreateAccountDto): GetAccountDto {
+        val accountInstitute = instituteService.getInstituteById(createAccountDto.instituteID)
+        val accountOwner = ownerService.getOwnerById(createAccountDto.ownerID)
+        val accountToSave = fromCreateAccountDto(createAccountDto, accountInstitute, accountOwner)
         val savedAccount = accountRepository.save(accountToSave)
-        return savedAccount.id!!
+        return toGetAccountDto(savedAccount)
+    }
+
+    fun updateAccount(id: UUID, editAccountDto: EditAccountDto): GetAccountDto {
+        return accountRepository.findById(id).map {
+            val targetInstitute: Institute = if (editAccountDto.instituteID == null) {
+                it.institute
+            } else {
+                instituteService.getInstituteById(editAccountDto.instituteID)
+            }
+
+            val targetOwner: Owner = if (editAccountDto.ownerID == null) {
+                it.owner
+            } else {
+                ownerService.getOwnerById(editAccountDto.ownerID)
+            }
+
+            val save = accountRepository.save(
+                fromEditAccountDto(it, editAccountDto, targetInstitute, targetOwner)
+            )
+            toGetAccountDto(save)
+        }.orElseGet(null)
     }
 
     @Transactional
     fun deleteAccount(id: UUID) {
         val toDeleteAccount = getAccountById(id)
         accountRepository.delete(toDeleteAccount)
-    }
-
-    fun updateAccount(accountDto: AccountDto, id: UUID): AccountDto {
-        return accountRepository.findById(id).map {
-            val save = accountRepository.save(
-                Account(
-                    id = it.id,
-                    accountName = accountDto.accountName,
-                    startingBalance = accountDto.startingBalance,
-                    institute = instituteService.getInstituteById(UUID.fromString(accountDto.instituteId)),
-                    transactions = it.transactions,
-                    owner = ownerService.getOwnerById(UUID.fromString(accountDto.ownerId))
-                )
-            )
-            convertAccountToAccountDto(save)
-        }.orElseGet(null)
     }
 
 }

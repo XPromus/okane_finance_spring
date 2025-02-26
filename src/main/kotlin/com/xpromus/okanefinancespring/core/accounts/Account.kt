@@ -13,15 +13,10 @@ class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
-    @Column(name = "accountName")
+    @Column(name = "accountName", nullable = false)
     val accountName: String = "",
-    @Column(name = "startingBalance")
+    @Column(name = "startingBalance", nullable = false)
     val startingBalance: Long = 0,
-
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "institute_id")
-    val institute: Institute = Institute(),
 
     @OneToMany(
         mappedBy = "targetAccount",
@@ -30,6 +25,11 @@ class Account(
         fetch = FetchType.LAZY
     )
     val transactions: List<Transaction> = emptyList(),
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "institute_id")
+    val institute: Institute = Institute(),
 
     @ManyToOne
     @JsonBackReference

@@ -1,5 +1,8 @@
 package com.xpromus.okanefinancespring.core.accounts
 
+import com.xpromus.okanefinancespring.core.accounts.dtos.CreateAccountDto
+import com.xpromus.okanefinancespring.core.accounts.dtos.EditAccountDto
+import com.xpromus.okanefinancespring.core.accounts.dtos.GetAccountDto
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -15,33 +18,22 @@ class AccountController(
     fun getAccounts(
         @RequestParam(name = "id", required = false) id: UUID?,
         @RequestParam(name = "accountName", required = false) accountName: String?,
-        @RequestParam(name = "startingBalance", required = false) startingBalance: Long?
-    ): List<AccountDto> {
-        return accountService.getAllAccounts(id, accountName, startingBalance)
-    }
-
-    @GetMapping("/{id}/expenses")
-    @ResponseStatus(HttpStatus.OK)
-    fun getAccountExpensesInDateRange(
-        @PathVariable id: UUID,
-        @RequestParam(name = "lowerDate", required = false) lowerDate: Date?,
-        @RequestParam(name = "upperDate", required = false) upperDate: Date?
-    ): Long {
-        return accountService.getExpensesOfAccountInDateRange(id, lowerDate, upperDate)
-    }
-
-    @GetMapping("/{id}/income")
-    fun getAccountIncomeInDateRange(
-        @PathVariable id: UUID,
-        @RequestParam(name = "lowerDate", required = false) lowerDate: Date?,
-        @RequestParam(name = "upperDate", required = false) upperDate: Date?
-    ): Long {
-        return accountService.getIncomeOfAccountInDateRange(id, lowerDate, upperDate)
+        @RequestParam(name = "startingBalance", required = false) startingBalance: Long?,
+        @RequestParam(name = "instituteID", required = false) instituteID: UUID?,
+        @RequestParam(name = "ownerID", required = false) ownerID: UUID?
+    ): List<GetAccountDto> {
+        return accountService.getAllAccounts(
+            id,
+            accountName,
+            startingBalance,
+            instituteID,
+            ownerID
+        )
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createAccount(@RequestBody accountDto: AccountDto): UUID {
+    fun createAccount(@RequestBody accountDto: CreateAccountDto): GetAccountDto {
         return accountService.createAccount(accountDto)
     }
 
@@ -57,9 +49,9 @@ class AccountController(
     @ResponseStatus(HttpStatus.OK)
     fun updateAccount(
         @PathVariable id: UUID,
-        @RequestBody accountDto: AccountDto,
-    ): AccountDto {
-        return accountService.updateAccount(accountDto, id)
+        @RequestBody accountDto: EditAccountDto,
+    ): GetAccountDto {
+        return accountService.updateAccount(id, accountDto)
     }
 
 }
