@@ -2,7 +2,7 @@ package com.xpromus.okanefinancespring.payees
 
 import com.xpromus.okanefinancespring.transactions.transaction.Transaction
 import jakarta.persistence.*
-import java.util.UUID
+import java.util.*
 
 @Entity(name = "payee")
 @Table(name = "payee")

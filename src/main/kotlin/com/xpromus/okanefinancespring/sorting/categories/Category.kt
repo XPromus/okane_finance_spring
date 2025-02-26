@@ -1,10 +1,9 @@
 package com.xpromus.okanefinancespring.sorting.categories
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okanefinancespring.budgets.Budget
 import com.xpromus.okanefinancespring.transactions.transaction.Transaction
 import jakarta.persistence.*
-import java.util.UUID
+import java.util.*
 
 @Entity(name = "category")
 @Table(name = "category")
@@ -28,7 +27,6 @@ class Category(
     @JoinColumn(name = "childCategory_id", referencedColumnName = "id")
     var childCategory: Category? = null,
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "budget_id")
     var targetBudget: Budget? = null
 )

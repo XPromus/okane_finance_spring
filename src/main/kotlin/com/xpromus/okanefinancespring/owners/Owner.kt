@@ -1,11 +1,10 @@
 package com.xpromus.okanefinancespring.owners
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.xpromus.okanefinancespring.accounts.Account
 import com.xpromus.okanefinancespring.stocks.depot.Depot
-import com.xpromus.okanefinancespring.stocks.taxexemption.entry.TaxExemptionEntry
 import jakarta.persistence.*
-import java.util.Date
-import java.util.UUID
+import java.util.*
 
 @Entity(name = "owner")
 @Table(name = "owner")

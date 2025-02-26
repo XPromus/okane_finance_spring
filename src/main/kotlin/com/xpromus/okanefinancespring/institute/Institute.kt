@@ -3,7 +3,7 @@ package com.xpromus.okanefinancespring.institute
 import com.xpromus.okanefinancespring.accounts.Account
 import com.xpromus.okanefinancespring.stocks.depot.Depot
 import jakarta.persistence.*
-import java.util.UUID
+import java.util.*
 
 @Entity(name = "institute")
 @Table(name = "institute")
