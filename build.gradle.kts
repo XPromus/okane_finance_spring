@@ -1,6 +1,5 @@
 plugins {
 	kotlin("jvm") version "1.9.25"
-	kotlin("kapt") version "2.1.10"
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
@@ -33,8 +32,6 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.mapstruct:mapstruct:1.6.3")
-	kapt("org.mapstruct:mapstruct-processor:1.6.3")
 	runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
