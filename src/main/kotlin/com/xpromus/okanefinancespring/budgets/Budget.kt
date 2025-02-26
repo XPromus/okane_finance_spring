@@ -2,7 +2,7 @@ package com.xpromus.okanefinancespring.budgets
 
 import com.xpromus.okanefinancespring.sorting.categories.Category
 import jakarta.persistence.*
-import java.util.UUID
+import java.util.*
 
 @Entity(name = "budget")
 @Table(name = "budget")

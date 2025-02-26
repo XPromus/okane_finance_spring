@@ -1,6 +1,5 @@
 package com.xpromus.okanefinancespring.stocks.order
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okanefinancespring.stocks.depot.Depot
 import jakarta.persistence.*
 import java.util.*
@@ -26,7 +25,6 @@ class StockOrder(
     @Column(name = "trade_date", nullable = false)
     val tradeDate: Date = Date(),
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "depot_id", nullable = false)
     val targetDepot: Depot = Depot()
 )
