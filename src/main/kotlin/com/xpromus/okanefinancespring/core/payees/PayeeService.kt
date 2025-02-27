@@ -1,5 +1,11 @@
 package com.xpromus.okanefinancespring.core.payees
 
+import com.xpromus.okanefinancespring.core.payees.dtos.CreatePayeeDto
+import com.xpromus.okanefinancespring.core.payees.dtos.EditPayeeDto
+import com.xpromus.okanefinancespring.core.payees.dtos.GetPayeeDto
+import com.xpromus.okanefinancespring.core.payees.mapper.fromCreatePayeeDto
+import com.xpromus.okanefinancespring.core.payees.mapper.fromEditPayeeDto
+import com.xpromus.okanefinancespring.core.payees.mapper.toGetPayeeDto
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.util.getEntityNotFoundExceptionMessage
 import jakarta.transaction.Transactional
@@ -18,12 +24,21 @@ class PayeeService(
         }
     }
 
-    fun getAllPayees(id: UUID?, payeeName: String?): List<Payee> {
-        return payeeRepository.findPayeesByFields(id, payeeName)
+    fun getAllPayees(id: UUID?, payeeName: String?): List<GetPayeeDto> {
+        val payeesToReturn = payeeRepository.findPayeesByFields(id, payeeName)
+        return payeesToReturn.map { toGetPayeeDto(it) }
     }
 
-    fun createPayee(payeeDto: PayeeDto): Payee {
-        return payeeRepository.save(convertPayeeDtoToPayee(payeeDto))
+    fun createPayee(createPayeeDto: CreatePayeeDto): GetPayeeDto {
+        val newPayee = payeeRepository.save(fromCreatePayeeDto(createPayeeDto))
+        return toGetPayeeDto(newPayee)
+    }
+
+    fun updatePayee(id: UUID, editPayeeDto: EditPayeeDto): GetPayeeDto {
+        return payeeRepository.findById(id).map {
+            val save = payeeRepository.save(fromEditPayeeDto(it, editPayeeDto))
+            toGetPayeeDto(save)
+        }.orElseGet(null)
     }
 
     @Transactional
@@ -31,22 +46,4 @@ class PayeeService(
         val toDeletePayee = getPayeeById(id)
         payeeRepository.delete(toDeletePayee)
     }
-
-    fun updatePayee(payeeDto: PayeeDto, id: UUID): Payee {
-        return payeeRepository.findById(id).map {
-            val save = payeeRepository.save(
-                Payee(
-                    id = it.id,
-                    payeeName = payeeDto.payeeName,
-                    transactions = it.transactions
-                )
-            )
-            Payee(
-                id = save.id,
-                payeeName = save.payeeName,
-                transactions = save.transactions
-            )
-        }.orElseGet(null)
-    }
-
 }
