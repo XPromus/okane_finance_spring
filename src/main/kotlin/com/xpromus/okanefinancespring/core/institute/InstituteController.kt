@@ -1,5 +1,8 @@
 package com.xpromus.okanefinancespring.core.institute
 
+import com.xpromus.okanefinancespring.core.institute.dtos.CreateInstituteDto
+import com.xpromus.okanefinancespring.core.institute.dtos.EditInstituteDto
+import com.xpromus.okanefinancespring.core.institute.dtos.GetInstituteDto
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,22 +21,30 @@ import java.util.UUID
 class InstituteController(
     private val instituteService: InstituteService
 ) {
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     fun getInstitutes(
         @RequestParam(name = "id", required = false) id: UUID?,
         @RequestParam(name = "name", required = false) name: String?
-    ): List<Institute> {
+    ): List<GetInstituteDto> {
         return instituteService.getAllInstitutes(id, name)
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createInstitute(
-        @RequestBody instituteDto: InstituteDto
-    ): Institute {
-        return instituteService.createInstitute(instituteDto)
+        @RequestBody createInstituteDto: CreateInstituteDto
+    ): GetInstituteDto {
+        return instituteService.createInstitute(createInstituteDto)
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateInstitute(
+        @PathVariable id: UUID,
+        @RequestBody editInstituteDto: EditInstituteDto
+    ): GetInstituteDto {
+        return instituteService.updateInstitute(id, editInstituteDto)
     }
 
     @DeleteMapping("/{id}")
@@ -43,14 +54,4 @@ class InstituteController(
     ) {
         instituteService.deleteInstitute(id)
     }
-
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    fun updateInstitute(
-        @PathVariable id: UUID,
-        @RequestBody instituteDto: InstituteDto
-    ): Institute {
-        return instituteService.updateInstitute(instituteDto, id)
-    }
-
 }

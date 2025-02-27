@@ -1,5 +1,11 @@
 package com.xpromus.okanefinancespring.core.institute
 
+import com.xpromus.okanefinancespring.core.institute.dtos.CreateInstituteDto
+import com.xpromus.okanefinancespring.core.institute.dtos.EditInstituteDto
+import com.xpromus.okanefinancespring.core.institute.dtos.GetInstituteDto
+import com.xpromus.okanefinancespring.core.institute.mapper.fromCreateInstituteDto
+import com.xpromus.okanefinancespring.core.institute.mapper.fromEditInstituteDto
+import com.xpromus.okanefinancespring.core.institute.mapper.toGetInstituteDto
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.util.getEntityNotFoundExceptionMessage
 import jakarta.transaction.Transactional
@@ -10,7 +16,6 @@ import java.util.UUID
 class InstituteService (
     private val instituteRepository: InstituteRepository
 ) {
-
     fun getInstituteById(id: UUID): Institute {
         return instituteRepository.findById(id).orElseThrow {
             throw EntityNotFoundException(
@@ -22,14 +27,25 @@ class InstituteService (
     fun getAllInstitutes(
         id: UUID?,
         name: String?
-    ): List<Institute> {
-        return instituteRepository.findInstitutesByFields(
+    ): List<GetInstituteDto> {
+        val institutesToReturn = instituteRepository.findInstitutesByFields(
             id, name
         )
+        return institutesToReturn.map { toGetInstituteDto(it) }
     }
 
-    fun createInstitute(instituteDto: InstituteDto): Institute {
-        return instituteRepository.save(convertInstituteDtoToInstitute(instituteDto))
+    fun createInstitute(createInstituteDto: CreateInstituteDto): GetInstituteDto {
+        val newInstitute = instituteRepository.save(fromCreateInstituteDto(createInstituteDto))
+        return toGetInstituteDto(newInstitute)
+    }
+
+    fun updateInstitute(id: UUID, editInstituteDto: EditInstituteDto): GetInstituteDto {
+        return instituteRepository.findById(id).map {
+            val save = instituteRepository.save(
+                fromEditInstituteDto(it, editInstituteDto)
+            )
+            toGetInstituteDto(save)
+        }.orElseGet(null)
     }
 
     @Transactional
@@ -37,24 +53,4 @@ class InstituteService (
         val toDeleteInstitute = getInstituteById(id)
         instituteRepository.delete(toDeleteInstitute)
     }
-
-    fun updateInstitute(instituteDto: InstituteDto, id: UUID): Institute {
-        return instituteRepository.findById(id).map {
-            val save = instituteRepository.save(
-                Institute(
-                    id = it.id,
-                    name = instituteDto.name,
-                    accounts = it.accounts,
-                    depots = it.depots
-                )
-            )
-            Institute(
-                id = save.id,
-                name = save.name,
-                accounts = save.accounts,
-                depots = save.depots
-            )
-        }.orElseGet(null)
-    }
-
 }

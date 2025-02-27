@@ -11,8 +11,8 @@ class Institute (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
-    @Column(name = "name", nullable = false)
-    val name: String = "",
+    @Column(name = "instituteName", nullable = false)
+    val instituteName: String = "",
     @OneToMany(
         mappedBy = "institute",
         cascade = [CascadeType.REMOVE],

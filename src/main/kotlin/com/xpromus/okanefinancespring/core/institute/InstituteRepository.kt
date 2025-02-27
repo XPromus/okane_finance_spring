@@ -9,10 +9,10 @@ interface InstituteRepository : JpaRepository<Institute, UUID> {
     @Query(
         "SELECT i FROM institute i WHERE " +
                 "(:id IS NULL OR i.id = :id) AND" +
-                "(:name IS NULL OR i.name = :name)"
+                "(:instituteName IS NULL OR i.instituteName = :instituteName)"
     )
     fun findInstitutesByFields(
         id: UUID?,
-        name: String?
+        instituteName: String?
     ): MutableList<Institute>
 }
