@@ -1,5 +1,11 @@
 package com.xpromus.okanefinancespring.core.sorting.tags
 
+import com.xpromus.okanefinancespring.core.sorting.tags.dtos.CreateTagDto
+import com.xpromus.okanefinancespring.core.sorting.tags.dtos.EditTagDto
+import com.xpromus.okanefinancespring.core.sorting.tags.dtos.GetTagDto
+import com.xpromus.okanefinancespring.core.sorting.tags.mapper.fromCreateTagDto
+import com.xpromus.okanefinancespring.core.sorting.tags.mapper.fromEditTagDto
+import com.xpromus.okanefinancespring.core.sorting.tags.mapper.toGetTagDto
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.util.getEntityNotFoundExceptionMessage
 import jakarta.transaction.Transactional
@@ -10,7 +16,6 @@ import java.util.*
 class TagService(
     private val tagRepository: TagRepository,
 ) {
-
     fun getTagById(id: UUID): Tag {
         return tagRepository.findById(id).orElseGet {
             throw EntityNotFoundException(
@@ -19,12 +24,21 @@ class TagService(
         }
     }
 
-    fun getAllTags(id: UUID?, tagName: String?): List<Tag> {
-        return tagRepository.findTagsByFields(id, tagName)
+    fun getAllTags(id: UUID?, tagName: String?): List<GetTagDto> {
+        val tagsToReturn = tagRepository.findTagsByFields(id, tagName)
+        return tagsToReturn.map { toGetTagDto(it) }
     }
 
-    fun createTag(tagDto: TagDto): Tag {
-        return tagRepository.save(convertTagDtoToTag(tagDto))
+    fun createTag(createTagDto: CreateTagDto): GetTagDto {
+        val newTag = tagRepository.save(fromCreateTagDto(createTagDto))
+        return toGetTagDto(newTag)
+    }
+
+    fun updateTag(id: UUID, editTagDto: EditTagDto): GetTagDto {
+        return tagRepository.findById(id).map {
+            val save = tagRepository.save(fromEditTagDto(it, editTagDto))
+            toGetTagDto(save)
+        }.orElseGet(null)
     }
 
     @Transactional
@@ -32,22 +46,4 @@ class TagService(
         val toDeleteTag = getTagById(id)
         tagRepository.delete(toDeleteTag)
     }
-
-    fun updateTag(tagDto: TagDto, id: UUID): Tag {
-        return tagRepository.findById(id).map {
-            val save = tagRepository.save(
-                Tag(
-                    id = it.id,
-                    tagName = tagDto.tagName,
-                    transactions = it.transactions
-                )
-            )
-            Tag(
-                id = save.id,
-                tagName = save.tagName,
-                transactions = save.transactions
-            )
-        }.orElseGet(null)
-    }
-
 }
