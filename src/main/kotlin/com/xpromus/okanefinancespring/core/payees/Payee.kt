@@ -1,6 +1,6 @@
 package com.xpromus.okanefinancespring.core.payees
 
-import com.xpromus.okanefinancespring.core.transactions.transaction.Transaction
+import com.xpromus.okanefinancespring.core.transaction.Transaction
 import jakarta.persistence.*
 import java.util.*
 

@@ -1,6 +1,6 @@
 package com.xpromus.okanefinancespring.core.budgets
 
-import com.xpromus.okanefinancespring.core.sorting.categories.Category
+import com.xpromus.okanefinancespring.core.categories.Category
 import jakarta.persistence.*
 import java.util.*
 

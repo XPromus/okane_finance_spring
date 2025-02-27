@@ -3,7 +3,7 @@ package com.xpromus.okanefinancespring.core.accounts
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okanefinancespring.core.institute.Institute
 import com.xpromus.okanefinancespring.core.owners.Owner
-import com.xpromus.okanefinancespring.core.transactions.transaction.Transaction
+import com.xpromus.okanefinancespring.core.transaction.Transaction
 import jakarta.persistence.*
 import java.util.*
 
