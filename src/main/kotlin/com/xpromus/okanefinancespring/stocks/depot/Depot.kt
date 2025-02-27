@@ -13,6 +13,8 @@ class Depot (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
+    @Column(name = "depotName", nullable = false)
+    val depotName: String = "",
     @ManyToOne
     @JoinColumn(name = "institute_id")
     val institute: Institute = Institute(),

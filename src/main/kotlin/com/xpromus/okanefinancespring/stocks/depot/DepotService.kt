@@ -28,12 +28,13 @@ class DepotService(
 
     fun getAllDepots(
         id: UUID?,
+        depotName: String?,
         instituteID: UUID?,
         ownerID: UUID?,
         taxExemptionEntryID: UUID?
     ): List<GetDepotDto> {
         val depotsToReturn = depotRepository.findDepotsByField(
-            id, instituteID, ownerID, taxExemptionEntryID
+            id, depotName, instituteID, ownerID, taxExemptionEntryID
         )
         return depotsToReturn.map { toGetDepotDto(it) }
     }
@@ -43,7 +44,12 @@ class DepotService(
             institute = instituteService.getInstituteById(createDepotDto.instituteID),
             owner = ownerService.getOwnerById(createDepotDto.ownerID)
         )
-        val newDepot = depotRepository.save(fromCreateDepotDto(createDepotClassesDto))
+        val newDepot = depotRepository.save(
+            fromCreateDepotDto(
+                createDepotDto,
+                createDepotClassesDto
+            )
+        )
         return toGetDepotDto(newDepot)
     }
 
@@ -63,7 +69,7 @@ class DepotService(
 
         return depotRepository.findById(id).map {
             val save = depotRepository.save(
-                fromEditDepotDto(it, editDepotClassesDto)
+                fromEditDepotDto(it, editDepotDto, editDepotClassesDto)
             )
             toGetDepotDto(save)
         }.orElseGet(null)

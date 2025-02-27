@@ -16,12 +16,13 @@ class DepotController(
     @ResponseStatus(HttpStatus.OK)
     fun getDepots(
         @RequestParam(name = "id", required = false) id: UUID?,
+        @RequestParam(name = "depotName", required = false) depotName: String?,
         @RequestParam(name = "institute", required = false) instituteID: UUID?,
         @RequestParam(name = "owner", required = false) ownerID: UUID?,
         @RequestParam(name = "taxExemptionEntry", required = false) taxExemptionEntryID: UUID?
     ): List<GetDepotDto> {
         return depotService.getAllDepots(
-            id, instituteID, ownerID, taxExemptionEntryID
+            id, depotName, instituteID, ownerID, taxExemptionEntryID
         )
     }
 
