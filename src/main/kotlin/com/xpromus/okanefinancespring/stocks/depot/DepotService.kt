@@ -3,6 +3,10 @@ package com.xpromus.okanefinancespring.stocks.depot
 import com.xpromus.okanefinancespring.core.institute.InstituteService
 import com.xpromus.okanefinancespring.core.owners.OwnerService
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
+import com.xpromus.okanefinancespring.stocks.depot.dtos.*
+import com.xpromus.okanefinancespring.stocks.depot.mapper.fromCreateDepotDto
+import com.xpromus.okanefinancespring.stocks.depot.mapper.fromEditDepotDto
+import com.xpromus.okanefinancespring.stocks.depot.mapper.toGetDepotDto
 import com.xpromus.okanefinancespring.util.getEntityNotFoundExceptionMessage
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -14,7 +18,6 @@ class DepotService(
     private val ownerService: OwnerService,
     private val instituteService: InstituteService
 ) {
-
     fun getDepotById(id: UUID): Depot {
         return depotRepository.findById(id).orElseThrow{
             throw EntityNotFoundException(
@@ -24,17 +27,46 @@ class DepotService(
     }
 
     fun getAllDepots(
-        id: UUID?
-    ): List<Depot> {
-        return depotRepository.findDepotsByField(id)
+        id: UUID?,
+        instituteID: UUID?,
+        ownerID: UUID?,
+        taxExemptionEntryID: UUID?
+    ): List<GetDepotDto> {
+        val depotsToReturn = depotRepository.findDepotsByField(
+            id, instituteID, ownerID, taxExemptionEntryID
+        )
+        return depotsToReturn.map { toGetDepotDto(it) }
     }
 
-    fun createDepot(depotDto: DepotDto): Depot {
-        val depotOwner = ownerService.getOwnerById(UUID.fromString(depotDto.ownerId))
-        val depotInstitute = instituteService.getInstituteById(UUID.fromString(depotDto.instituteId))
-        return depotRepository.save(
-            convertDepotDtoToDepot(depotOwner, depotInstitute)
+    fun createDepot(createDepotDto: CreateDepotDto): GetDepotDto {
+        val createDepotClassesDto = CreateDepotClassesDto(
+            institute = instituteService.getInstituteById(createDepotDto.instituteID),
+            owner = ownerService.getOwnerById(createDepotDto.ownerID)
         )
+        val newDepot = depotRepository.save(fromCreateDepotDto(createDepotClassesDto))
+        return toGetDepotDto(newDepot)
+    }
+
+    fun updateDepot(id: UUID, editDepotDto: EditDepotDto): GetDepotDto {
+        val editDepotClassesDto = EditDepotClassesDto(
+            institute = if (editDepotDto.instituteID == null) {
+                null
+            } else {
+                instituteService.getInstituteById(editDepotDto.instituteID)
+            },
+            owner = if (editDepotDto.ownerID == null) {
+                null
+            } else {
+                ownerService.getOwnerById(editDepotDto.ownerID)
+            }
+        )
+
+        return depotRepository.findById(id).map {
+            val save = depotRepository.save(
+                fromEditDepotDto(it, editDepotClassesDto)
+            )
+            toGetDepotDto(save)
+        }.orElseGet(null)
     }
 
     @Transactional
@@ -42,26 +74,4 @@ class DepotService(
         val toDeleteDepot = getDepotById(id)
         depotRepository.delete(toDeleteDepot)
     }
-
-    fun updateDepot(depotDto: DepotDto, id: UUID): Depot {
-        return depotRepository.findById(id).map {
-            val save = depotRepository.save(
-                Depot(
-                    id = it.id,
-                    owner = ownerService.getOwnerById(UUID.fromString(depotDto.ownerId)),
-                    institute = instituteService.getInstituteById(UUID.fromString(depotDto.instituteId)),
-                    taxExemptionEntry = it.taxExemptionEntry,
-                    stockOrders = it.stockOrders
-                )
-            )
-            Depot(
-                id = save.id,
-                owner = save.owner,
-                institute = save.institute,
-                taxExemptionEntry = save.taxExemptionEntry,
-                stockOrders = save.stockOrders
-            )
-        }.orElseGet(null)
-    }
-
 }
