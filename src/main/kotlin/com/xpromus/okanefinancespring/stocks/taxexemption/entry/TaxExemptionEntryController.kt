@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-@RequestMapping("/tax-exemption-entry")
+@RequestMapping("/tax-exemption/entry")
 class TaxExemptionEntryController(
     private val taxExemptionEntryService: TaxExemptionEntryService
 ) {
