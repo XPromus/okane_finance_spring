@@ -1,5 +1,11 @@
 package com.xpromus.okanefinancespring.core.owners
 
+import com.xpromus.okanefinancespring.core.owners.dtos.CreateOwnerDto
+import com.xpromus.okanefinancespring.core.owners.dtos.EditOwnerDto
+import com.xpromus.okanefinancespring.core.owners.dtos.GetOwnerDto
+import com.xpromus.okanefinancespring.core.owners.mapper.fromCreateOwnerDto
+import com.xpromus.okanefinancespring.core.owners.mapper.fromEditOwnerDto
+import com.xpromus.okanefinancespring.core.owners.mapper.toGetOwnerDto
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.util.getEntityNotFoundExceptionMessage
 import jakarta.transaction.Transactional
@@ -10,7 +16,6 @@ import java.util.*
 class OwnerService(
     private val ownerRepository: OwnerRepository,
 ) {
-
     fun getOwnerById(id: UUID): Owner {
         return ownerRepository.findById(id).orElseThrow {
             throw EntityNotFoundException(
@@ -24,16 +29,23 @@ class OwnerService(
         firstName: String?,
         lastName: String?,
         birthday: Date?,
-    ): List<OwnerDto> {
+    ): List<GetOwnerDto> {
         val ownersToReturn = ownerRepository.findOwnersByFields(
             id, firstName, lastName, birthday
         )
-        return ownersToReturn.map { convertOwnerToOwnerDto(it) }
+        return ownersToReturn.map { toGetOwnerDto(it) }
     }
 
-    fun createOwner(ownerDto: OwnerDto): UUID {
-        val savedOwner = ownerRepository.save(convertOwnerDtoToOwner(ownerDto))
-        return savedOwner.id!!
+    fun createOwner(ownerDto: CreateOwnerDto): GetOwnerDto {
+        val savedOwner = ownerRepository.save(fromCreateOwnerDto(ownerDto))
+        return toGetOwnerDto(savedOwner)
+    }
+
+    fun updateOwner(id: UUID, editOwnerDto: EditOwnerDto): GetOwnerDto {
+        return ownerRepository.findById(id).map {
+            val save = ownerRepository.save(fromEditOwnerDto(it,editOwnerDto))
+            toGetOwnerDto(save)
+        }.orElseGet(null)
     }
 
     @Transactional
@@ -41,21 +53,4 @@ class OwnerService(
         val toDeleteOwner = getOwnerById(id)
         ownerRepository.delete(toDeleteOwner)
     }
-
-    fun updateOwner(ownerDto: OwnerDto, id: UUID): OwnerDto {
-        return ownerRepository.findById(id).map {
-            val save = ownerRepository.save(
-                Owner(
-                    id = it.id,
-                    firstName = ownerDto.firstName,
-                    lastName = ownerDto.lastName,
-                    birthday = ownerDto.birthday,
-                    accounts = it.accounts,
-                    depots = it.depots
-                )
-            )
-            convertOwnerToOwnerDto(save)
-        }.orElseGet(null)
-    }
-
 }

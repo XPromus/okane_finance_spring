@@ -1,5 +1,8 @@
 package com.xpromus.okanefinancespring.core.owners
 
+import com.xpromus.okanefinancespring.core.owners.dtos.CreateOwnerDto
+import com.xpromus.okanefinancespring.core.owners.dtos.EditOwnerDto
+import com.xpromus.okanefinancespring.core.owners.dtos.GetOwnerDto
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -9,7 +12,6 @@ import java.util.*
 class OwnerController(
     private val ownerService: OwnerService,
 ) {
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     fun getOwners(
@@ -17,16 +19,25 @@ class OwnerController(
         @RequestParam(name = "firstName", required = false) firstName: String?,
         @RequestParam(name = "lastName", required = false) lastName: String?,
         @RequestParam(name = "birthday", required = false) birthday: Date?,
-    ): List<OwnerDto> {
+    ): List<GetOwnerDto> {
         return ownerService.getAllOwners(id, firstName, lastName, birthday)
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createOwner(
-        @RequestBody ownerDto: OwnerDto,
-    ): UUID {
-        return ownerService.createOwner(ownerDto)
+        @RequestBody createOwnerDto: CreateOwnerDto,
+    ): GetOwnerDto {
+        return ownerService.createOwner(createOwnerDto)
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateOwner(
+        @PathVariable id: UUID,
+        @RequestBody editOwnerDto: EditOwnerDto,
+    ): GetOwnerDto {
+        return ownerService.updateOwner(id, editOwnerDto)
     }
 
     @DeleteMapping("/{id}")
@@ -36,14 +47,4 @@ class OwnerController(
     ) {
         ownerService.deleteOwner(id)
     }
-
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    fun updateOwner(
-        @PathVariable id: UUID,
-        @RequestBody ownerDto: OwnerDto,
-    ): OwnerDto {
-        return ownerService.updateOwner(ownerDto, id)
-    }
-
 }
