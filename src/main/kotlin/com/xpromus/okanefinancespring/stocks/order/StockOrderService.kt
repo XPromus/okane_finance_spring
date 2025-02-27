@@ -2,6 +2,12 @@ package com.xpromus.okanefinancespring.stocks.order
 
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.stocks.depot.DepotService
+import com.xpromus.okanefinancespring.stocks.order.dtos.CreateStockOrderDto
+import com.xpromus.okanefinancespring.stocks.order.dtos.EditStockOrderDto
+import com.xpromus.okanefinancespring.stocks.order.dtos.GetStockOrderDto
+import com.xpromus.okanefinancespring.stocks.order.mapper.fromCreateStockOrderDto
+import com.xpromus.okanefinancespring.stocks.order.mapper.fromEditStockOrderDto
+import com.xpromus.okanefinancespring.stocks.order.mapper.toGetStockOrderDto
 import com.xpromus.okanefinancespring.util.getEntityNotFoundExceptionMessage
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -12,7 +18,6 @@ class StockOrderService(
     private val stockOrderRepository: StockOrderRepository,
     private val depotService: DepotService
 ) {
-
     fun getStockOrderById(id: UUID): StockOrder {
         return stockOrderRepository.findById(id).orElseThrow {
             throw EntityNotFoundException(
@@ -31,8 +36,8 @@ class StockOrderService(
         fees: Long?,
         tradeDate: Date?,
         targetDepotId: UUID?
-    ): List<StockOrder> {
-        return stockOrderRepository.findStockOrdersByFields(
+    ): List<GetStockOrderDto> {
+        val stockOrdersToReturn = stockOrderRepository.findStockOrdersByFields(
             id,
             isin,
             wkn,
@@ -43,13 +48,29 @@ class StockOrderService(
             tradeDate,
             targetDepotId
         )
+        return stockOrdersToReturn.map { toGetStockOrderDto(it) }
     }
 
-    fun createStockOrder(stockOrderDto: StockOrderDto): StockOrder {
-        val targetDepot = depotService.getDepotById(UUID.fromString(stockOrderDto.targetDepotId))
-        return stockOrderRepository.save(
-            convertStockOrderDtoToStockOrder(stockOrderDto, targetDepot)
+    fun createStockOrder(createStockOrderDto: CreateStockOrderDto): GetStockOrderDto {
+        val targetDepot = depotService.getDepotById(createStockOrderDto.targetDepotID)
+        val newStockOrder = stockOrderRepository.save(
+            fromCreateStockOrderDto(targetDepot, createStockOrderDto)
         )
+        return toGetStockOrderDto(newStockOrder)
+    }
+
+    fun updateStockOrder(id: UUID, editStockOrderDto: EditStockOrderDto): GetStockOrderDto {
+        val targetDepot = if (editStockOrderDto.targetDepotID == null) {
+            null
+        } else {
+            depotService.getDepotById(editStockOrderDto.targetDepotID)
+        }
+        return stockOrderRepository.findById(id).map {
+            val save = stockOrderRepository.save(
+                fromEditStockOrderDto(it, targetDepot, editStockOrderDto)
+            )
+            toGetStockOrderDto(save)
+        }.orElseGet(null)
     }
 
     @Transactional
@@ -57,35 +78,4 @@ class StockOrderService(
         val toDeleteStockOrder = getStockOrderById(id)
         stockOrderRepository.delete(toDeleteStockOrder)
     }
-
-    fun updateStockOrder(stockOrderDto: StockOrderDto, id: UUID): StockOrder {
-        val targetDepot = depotService.getDepotById(UUID.fromString(stockOrderDto.targetDepotId))
-        return stockOrderRepository.findById(id).map {
-            val save = stockOrderRepository.save(
-                StockOrder(
-                    id = it.id,
-                    isin = stockOrderDto.isin,
-                    wkn = stockOrderDto.wkn,
-                    stockName = stockOrderDto.stockName,
-                    numberOfStocks = stockOrderDto.numberOfStocks,
-                    buyInPrice = stockOrderDto.buyInPrice,
-                    fees = stockOrderDto.fees,
-                    tradeDate = stockOrderDto.tradeDate,
-                    targetDepot = targetDepot
-                )
-            )
-            StockOrder(
-                id = save.id,
-                isin = save.isin,
-                wkn = save.wkn,
-                stockName = save.stockName,
-                numberOfStocks = save.numberOfStocks,
-                buyInPrice = save.buyInPrice,
-                fees = save.fees,
-                tradeDate = save.tradeDate,
-                targetDepot = save.targetDepot
-            )
-        }.orElseGet(null)
-    }
-
 }

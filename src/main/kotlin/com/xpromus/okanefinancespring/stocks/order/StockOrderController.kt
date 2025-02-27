@@ -1,5 +1,8 @@
 package com.xpromus.okanefinancespring.stocks.order
 
+import com.xpromus.okanefinancespring.stocks.order.dtos.CreateStockOrderDto
+import com.xpromus.okanefinancespring.stocks.order.dtos.EditStockOrderDto
+import com.xpromus.okanefinancespring.stocks.order.dtos.GetStockOrderDto
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -9,7 +12,6 @@ import java.util.*
 class StockOrderController(
     private val stockOrderService: StockOrderService
 ) {
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     fun getStockOrders(
@@ -22,7 +24,7 @@ class StockOrderController(
         @RequestParam(name = "fees", required = false) fees: Long?,
         @RequestParam(name = "tradeDate", required = false) tradeDate: Date?,
         @RequestParam(name = "targetDepotId", required = false) targetDepotId: UUID?
-    ): List<StockOrder> {
+    ): List<GetStockOrderDto> {
         return stockOrderService.getAllStockOrders(
             id, isin, wkn, stockName, numberOfStocks, buyInPrice, fees, tradeDate, targetDepotId
         )
@@ -31,9 +33,18 @@ class StockOrderController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createStockOrder(
-        @RequestBody stockOrderDto: StockOrderDto
-    ): StockOrder {
-        return stockOrderService.createStockOrder(stockOrderDto)
+        @RequestBody createStockOrderDto: CreateStockOrderDto
+    ): GetStockOrderDto {
+        return stockOrderService.createStockOrder(createStockOrderDto)
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateStockOrder(
+        @PathVariable id: UUID,
+        @RequestBody editStockOrderDto: EditStockOrderDto
+    ): GetStockOrderDto {
+        return stockOrderService.updateStockOrder(id, editStockOrderDto)
     }
 
     @DeleteMapping("/{id}")
@@ -43,14 +54,4 @@ class StockOrderController(
     ) {
         stockOrderService.deleteStockOrder(id)
     }
-
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    fun updateStockOrder(
-        @PathVariable id: UUID,
-        @RequestBody stockOrderDto: StockOrderDto
-    ): StockOrder {
-        return stockOrderService.updateStockOrder(stockOrderDto, id)
-    }
-
 }

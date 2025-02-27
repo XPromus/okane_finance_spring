@@ -1,8 +1,10 @@
-package com.xpromus.okanefinancespring.stocks.order
+package com.xpromus.okanefinancespring.stocks.order.dtos
 
 import java.util.Date
+import java.util.UUID
 
-data class StockOrderDto(
+data class GetStockOrderDto(
+    val id: UUID,
     val isin: String,
     val wkn: String,
     val stockName: String,
@@ -10,5 +12,5 @@ data class StockOrderDto(
     val buyInPrice: Long,
     val fees: Long,
     val tradeDate: Date,
-    val targetDepotId: String
+    val targetDepotID: UUID
 )
