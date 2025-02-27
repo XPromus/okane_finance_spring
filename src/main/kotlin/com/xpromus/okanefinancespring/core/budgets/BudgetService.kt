@@ -1,5 +1,11 @@
 package com.xpromus.okanefinancespring.core.budgets
 
+import com.xpromus.okanefinancespring.core.budgets.dtos.CreateBudgetDto
+import com.xpromus.okanefinancespring.core.budgets.dtos.EditBudgetDto
+import com.xpromus.okanefinancespring.core.budgets.dtos.GetBudgetDto
+import com.xpromus.okanefinancespring.core.budgets.mapper.fromCreateBudgetDto
+import com.xpromus.okanefinancespring.core.budgets.mapper.fromEditBudgetDto
+import com.xpromus.okanefinancespring.core.budgets.mapper.toGetBudgetDto
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.util.getEntityNotFoundExceptionMessage
 import jakarta.transaction.Transactional
@@ -10,7 +16,6 @@ import java.util.*
 class BudgetService(
     private val budgetRepository: BudgetRepository,
 ) {
-
     fun getBudgetById(id: UUID): Budget {
         return budgetRepository.findById(id).orElseThrow {
             throw EntityNotFoundException(
@@ -21,16 +26,25 @@ class BudgetService(
 
     fun getAllBudgets(
         id: UUID?, budgetName: String?, maxValue: Long?,
-    ): List<Budget> {
-        return budgetRepository.findBudgetsByFields(
+    ): List<GetBudgetDto> {
+        val budgetsToReturn = budgetRepository.findBudgetsByFields(
             id,
             budgetName,
             maxValue
         )
+        return budgetsToReturn.map { toGetBudgetDto(it) }
     }
 
-    fun createBudget(budgetDto: BudgetDto): Budget {
-        return budgetRepository.save(convertBudgetDtoToBudget(budgetDto))
+    fun createBudget(createBudgetDto: CreateBudgetDto): GetBudgetDto {
+        val newBudget = budgetRepository.save(fromCreateBudgetDto(createBudgetDto))
+        return toGetBudgetDto(newBudget)
+    }
+
+    fun updateBudget(id: UUID, editBudgetDto: EditBudgetDto): GetBudgetDto {
+        return budgetRepository.findById(id).map {
+            val save = budgetRepository.save(fromEditBudgetDto(it, editBudgetDto))
+            toGetBudgetDto(save)
+        }.orElseGet(null)
     }
 
     @Transactional
@@ -38,24 +52,4 @@ class BudgetService(
         val toDeleteBudget = getBudgetById(id)
         budgetRepository.delete(toDeleteBudget)
     }
-
-    fun updateBudget(budgetDto: BudgetDto, id: UUID): Budget {
-        return budgetRepository.findById(id).map {
-            val save = budgetRepository.save(
-                Budget(
-                    id = it.id,
-                    budgetName = budgetDto.budgetName,
-                    maxValue = budgetDto.maxValue,
-                    targetCategories = it.targetCategories
-                )
-            )
-            Budget(
-                id = save.id,
-                budgetName = save.budgetName,
-                maxValue = save.maxValue,
-                targetCategories = save.targetCategories
-            )
-        }.orElseGet(null)
-    }
-
 }
