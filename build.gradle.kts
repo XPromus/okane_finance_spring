@@ -5,6 +5,11 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.asciidoctor.jvm.convert") version "3.3.2"
 	id("org.jetbrains.kotlin.plugin.allopen") version "2.1.10"
+	id("io.ktor.plugin") version "3.1.1"
+}
+
+application {
+	mainClass.set("com.xpromus.okanefinancespring.OkaneFinanceSpringApplicationKt")
 }
 
 allOpen {
@@ -32,7 +37,6 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	//runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
@@ -43,6 +47,12 @@ dependencies {
 kotlin {
 	compilerOptions {
 		freeCompilerArgs.addAll("-Xjsr305=strict")
+	}
+}
+
+ktor {
+	fatJar {
+		archiveFileName.set("fat.jar")
 	}
 }
 
