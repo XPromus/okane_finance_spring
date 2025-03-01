@@ -10,9 +10,9 @@ interface TaxExemptionEntryRepository : JpaRepository<TaxExemptionEntry, UUID> {
 
     @Query(
         "SELECT t FROM tax_exemption_entry t WHERE " +
-                "(:id IS NULL OR t.id = :id) AND " +
-                "(:taxValue IS NULL OR t.taxValue = :taxValue) AND " +
-                "(:depotID IS NULL OR t.depot.id = :depotID)"
+                "(cast(:id as uuid) IS NULL OR t.id = :id) AND " +
+                "(cast(:taxValue as int) IS NULL OR t.taxValue = :taxValue) AND " +
+                "(cast(:depotID as uuid) IS NULL OR t.depot.id = :depotID)"
     )
     fun findTaxExemptionEntriesByFields(
         id: UUID?,

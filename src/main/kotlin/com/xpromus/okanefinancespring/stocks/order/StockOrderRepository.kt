@@ -9,15 +9,15 @@ import java.util.*
 interface StockOrderRepository : JpaRepository<StockOrder, UUID> {
 
     @Query("SELECT s from StockOrder s WHERE " +
-            "(:id IS NULL OR s.id = :id) AND " +
-            "(:isin IS NULL OR s.isin = :isin) AND " +
-            "(:wkn IS NULL OR s.wkn = :wkn) AND " +
-            "(:stockName IS NULL OR s.stockName = :stockName) AND " +
-            "(:numberOfStocks IS NULL OR s.numberOfStocks = :numberOfStocks) AND " +
-            "(:buyInPrice IS NULL OR s.buyInPrice = :buyInPrice) AND " +
-            "(:fees IS NULL OR s.fees = :fees) AND " +
-            "(:tradeDate IS NULL OR s.tradeDate = :tradeDate) AND " +
-            "(:targetDepotId IS NULL OR s.targetDepot.id = :targetDepotId)"
+            "(cast(:id as uuid) IS NULL OR s.id = :id) AND " +
+            "(cast(:isin as string) IS NULL OR s.isin = :isin) AND " +
+            "(cast(:wkn as string) IS NULL OR s.wkn = :wkn) AND " +
+            "(cast(:stockName as string) IS NULL OR s.stockName = :stockName) AND " +
+            "(cast(:numberOfStocks as int) IS NULL OR s.numberOfStocks = :numberOfStocks) AND " +
+            "(cast(:buyInPrice as long) IS NULL OR s.buyInPrice = :buyInPrice) AND " +
+            "(cast(:fees as long) IS NULL OR s.fees = :fees) AND " +
+            "(cast(:tradeDate as timestamp) IS NULL OR s.tradeDate = :tradeDate) AND " +
+            "(cast(:targetDepotId as uuid) IS NULL OR s.targetDepot.id = :targetDepotId)"
     )
     fun findStockOrdersByFields(
         id: UUID?,

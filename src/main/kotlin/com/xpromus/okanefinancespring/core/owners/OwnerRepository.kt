@@ -11,10 +11,10 @@ interface OwnerRepository : JpaRepository<Owner, UUID> {
 
     @Query(
         "SELECT o FROM owner o WHERE " +
-                "(:id IS NULL OR o.id = :id) AND" +
-                "(:firstName IS NULL OR o.firstName = :firstName) AND" +
-                "(:lastName IS NULL OR o.lastName = :lastName) AND" +
-                "(:birthday IS NULL OR o.birthday = :birthday)"
+                "(cast(:id as uuid) IS NULL OR o.id = :id) AND" +
+                "(cast(:firstName as string) IS NULL OR o.firstName = :firstName) AND" +
+                "(cast(:lastName as string) IS NULL OR o.lastName = :lastName) AND" +
+                "(cast(:birthday as timestamp) IS NULL OR o.birthday = :birthday)"
     )
     fun findOwnersByFields(
         id: UUID?,

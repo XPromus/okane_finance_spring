@@ -1,0 +1,25 @@
+services:
+  okane_finance_backend:
+    build:
+      context: ./backend
+    container_name: okane_finance_backend
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=okane
+      - POSTGRES_PASSWORD=okane
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/okane_finance
+      - SPRING_DATASOURCE_USERNAME=okane
+      - SPRING_DATASOURCE_PASSWORD=okane
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create_drop
+    ports:
+      - "8080:8080"
+  db:
+    image: postgres
+    container_name: okane_finance_db
+    environment:
+      - POSTGRES_USER=okane
+      - POSTGRES_PASSWORD=okane
+      - POSTGRES_DB=okane_finance
+    ports:
+      - "5432:5432"

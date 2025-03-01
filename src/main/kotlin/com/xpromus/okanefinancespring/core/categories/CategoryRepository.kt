@@ -9,8 +9,8 @@ import java.util.*
 interface CategoryRepository : JpaRepository<Category, UUID> {
     @Query(
         "SELECT c FROM category c WHERE " +
-                "(:id IS NULL OR c.id = :id) AND " +
-                "(:categoryName IS NULL OR c.categoryName = :categoryName)"
+                "(cast(:id as uuid) IS NULL OR c.id = :id) AND " +
+                "(cast(:categoryName as string) IS NULL OR c.categoryName = :categoryName)"
     )
     fun findCategoriesByFields(
         id: UUID?,

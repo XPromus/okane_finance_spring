@@ -9,11 +9,11 @@ import java.util.UUID
 interface DepotRepository : JpaRepository<Depot, UUID> {
 
     @Query("SELECT d FROM depot d WHERE " +
-            "(:id IS NULL OR d.id = :id) AND " +
-            "(:depotName IS NULL OR d.depotName = :depotName) AND " +
-            "(:instituteID IS NULL OR d.institute.id = :instituteID) AND " +
-            "(:ownerID IS NULL OR d.owner.id = :ownerID) AND " +
-            "(:taxExemptionEntryID IS NULL OR d.taxExemptionEntry.id = :taxExemptionEntryID)"
+            "(cast(:id as uuid) IS NULL OR d.id = :id) AND " +
+            "(cast(:depotName as string) IS NULL OR d.depotName = :depotName) AND " +
+            "(cast(:instituteID as uuid) IS NULL OR d.institute.id = :instituteID) AND " +
+            "(cast(:ownerID as uuid) IS NULL OR d.owner.id = :ownerID) AND " +
+            "(cast(:taxExemptionEntryID as uuid) IS NULL OR d.taxExemptionEntry.id = :taxExemptionEntryID)"
     )
     fun findDepotsByField(
         id: UUID?,

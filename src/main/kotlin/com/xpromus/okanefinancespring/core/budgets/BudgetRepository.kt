@@ -9,9 +9,9 @@ import java.util.UUID
 interface BudgetRepository : JpaRepository<Budget, UUID> {
     @Query(
         "SELECT b FROM budget b WHERE " +
-                "(:id IS NULL OR b.id = :id) AND" +
-                "(:budgetName IS NULL OR b.budgetName = :budgetName) AND" +
-                "(:maxValue IS NULL OR b.maxValue = :maxValue)"
+                "(cast(:id as uuid) IS NULL OR b.id = :id) AND" +
+                "(cast(:budgetName as string) IS NULL OR b.budgetName = :budgetName) AND" +
+                "(cast(:maxValue as long) IS NULL OR b.maxValue = :maxValue)"
     )
     fun findBudgetsByFields(
         id: UUID?,

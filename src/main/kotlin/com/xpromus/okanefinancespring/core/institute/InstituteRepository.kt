@@ -8,8 +8,8 @@ interface InstituteRepository : JpaRepository<Institute, UUID> {
 
     @Query(
         "SELECT i FROM institute i WHERE " +
-                "(:id IS NULL OR i.id = :id) AND" +
-                "(:instituteName IS NULL OR i.instituteName = :instituteName)"
+                "(cast(:id as uuid) IS NULL OR i.id = :id) AND" +
+                "(cast(:instituteName as string) IS NULL OR i.instituteName = :instituteName)"
     )
     fun findInstitutesByFields(
         id: UUID?,

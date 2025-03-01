@@ -9,8 +9,8 @@ import java.util.UUID
 interface PayeeRepository : JpaRepository<Payee, UUID> {
     @Query(
         "SELECT p FROM payee p WHERE " +
-                "(:id IS NULL OR p.id = :id) AND" +
-                "(:payeeName IS NULL OR p.payeeName = :payeeName)"
+                "(cast(:id as uuid) IS NULL OR p.id = :id) AND" +
+                "(cast(:payeeName as string) IS NULL OR p.payeeName = :payeeName)"
     )
     fun findPayeesByFields(
         id: UUID?,

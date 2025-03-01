@@ -9,11 +9,11 @@ import java.util.*
 interface TransactionRepository : JpaRepository<Transaction, UUID> {
     @Query(
         "SELECT t FROM transaction t WHERE " +
-                "(:id IS NULL OR t.id = :id) AND " +
-                "(:transactionName IS NULL OR t.transactionName = :transactionName) AND" +
-                "(:doneDate IS NULL OR t.doneDate = :doneDate) AND" +
-                "(:finishedDate IS NULL OR t.finishedDate = :finishedDate) AND" +
-                "(:amount IS NULL OR t.amount = :amount)"
+                "(cast(:id as uuid) IS NULL OR t.id = :id) AND " +
+                "(cast(:transactionName as string) IS NULL OR t.transactionName = :transactionName) AND" +
+                "(cast(:doneDate as timestamp) IS NULL OR t.doneDate = :doneDate) AND" +
+                "(cast(:finishedDate as timestamp) IS NULL OR t.finishedDate = :finishedDate) AND" +
+                "(cast(:amount as long) IS NULL OR t.amount = :amount)"
     )
     fun findTransactionsByFields(
         id: UUID?,
@@ -25,8 +25,8 @@ interface TransactionRepository : JpaRepository<Transaction, UUID> {
 
     @Query(
         "SELECT t FROM transaction t WHERE " +
-                "(t.doneDate > :lowerRange) AND " +
-                "(t.doneDate < :upperRange)"
+                "(t.doneDate > cast(:lowerRange as timestamp)) AND " +
+                "(t.doneDate < cast(:upperRange as timestamp))"
     )
     fun findTransactionsByDoneDateRange(
         lowerRange: Date,
@@ -35,20 +35,18 @@ interface TransactionRepository : JpaRepository<Transaction, UUID> {
 
     @Query(
         "SELECT t FROM transaction t WHERE " +
-                "(:targetAccount IS NULL OR t.targetAccount = :targetAccount) AND" +
-                "(:lowerRange IS NULL OR t.finishedDate > :lowerRange) AND " +
-                "(:upperRange IS NULL OR t.finishedDate < :upperRange)"
+                "(:lowerRange IS NULL OR t.finishedDate > cast(:lowerRange as timestamp)) AND " +
+                "(:upperRange IS NULL OR t.finishedDate < cast(:upperRange as timestamp))"
     )
     fun findTransactionsByFinishedDateRange(
-        targetAccount: com.xpromus.okanefinancespring.core.accounts.Account?,
         lowerRange: Date?,
         upperRange: Date?,
     ): MutableList<Transaction>
 
     @Query(
         "SELECT t FROM transaction t WHERE " +
-                "(t.amount > :lowerRange) AND " +
-                "(t.amount < :upperRange)"
+                "(t.amount > cast(:lowerRange as long)) AND " +
+                "(t.amount < cast(:upperRange as long))"
     )
     fun findTransactionsByAmountRange(
         lowerRange: Long,
