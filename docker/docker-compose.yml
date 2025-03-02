@@ -1,6 +1,5 @@
 services:
   okane_finance_backend:
-    image: eclipse-temurin:21-alpine
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -8,10 +7,12 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/okane_finance
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://okane_finance_db:5432/okane_finance
       - SPRING_DATASOURCE_USERNAME=okane
       - SPRING_DATASOURCE_PASSWORD=okane
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create_drop
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    networks:
+      - okane_network
     ports:
       - "8080:8080"
   db:
@@ -21,5 +22,11 @@ services:
       - POSTGRES_USER=okane
       - POSTGRES_PASSWORD=okane
       - POSTGRES_DB=okane_finance
+    networks:
+      - okane_network
     ports:
       - "5432:5432"
+
+networks:
+  okane_network:
+    driver: bridge

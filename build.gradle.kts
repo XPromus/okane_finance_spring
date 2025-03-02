@@ -50,12 +50,6 @@ kotlin {
 	}
 }
 
-ktor {
-	fatJar {
-		archiveFileName.set("fat.jar")
-	}
-}
-
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
