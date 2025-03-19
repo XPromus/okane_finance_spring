@@ -7,6 +7,7 @@ data class GetStockOrderDto(
     val id: UUID,
     val isin: String,
     val wkn: String,
+    val tickerSymbol: String,
     val stockName: String,
     val numberOfStocks: Int,
     val buyInPrice: Long,

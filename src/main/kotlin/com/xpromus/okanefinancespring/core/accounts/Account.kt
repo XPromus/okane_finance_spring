@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.xpromus.okanefinancespring.core.institute.Institute
 import com.xpromus.okanefinancespring.core.owners.Owner
 import com.xpromus.okanefinancespring.core.transaction.Transaction
+import com.xpromus.okanefinancespring.stocks.order.StockOrder
 import jakarta.persistence.*
 import java.util.*
 
@@ -25,6 +26,14 @@ class Account(
         fetch = FetchType.LAZY
     )
     val transactions: List<Transaction> = emptyList(),
+
+    @OneToMany(
+        mappedBy = "targetWithdrawAccount",
+        cascade = [CascadeType.REMOVE],
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    val stockOrders: List<StockOrder> = emptyList(),
 
     @ManyToOne
     @JsonBackReference

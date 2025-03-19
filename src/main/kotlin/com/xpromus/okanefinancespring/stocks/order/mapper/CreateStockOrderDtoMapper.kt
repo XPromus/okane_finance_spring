@@ -11,6 +11,7 @@ fun fromCreateStockOrderDto(
     return StockOrder(
         isin = createStockOrderDto.isin,
         wkn = createStockOrderDto.wkn,
+        tickerSymbol = createStockOrderDto.tickerSymbol,
         stockName = createStockOrderDto.stockName,
         numberOfStocks = createStockOrderDto.numberOfStocks,
         buyInPrice = createStockOrderDto.buyInPrice,

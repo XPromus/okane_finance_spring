@@ -13,6 +13,7 @@ fun fromEditStockOrderDto(
         id = stockOrder.id,
         isin = editStockOrderDto.isin ?: stockOrder.isin,
         wkn = editStockOrderDto.wkn ?: stockOrder.wkn,
+        tickerSymbol = editStockOrderDto.tickerSymbol ?: stockOrder.tickerSymbol,
         stockName = editStockOrderDto.stockName ?: stockOrder.stockName,
         numberOfStocks = editStockOrderDto.numberOfStocks ?: stockOrder.numberOfStocks,
         buyInPrice = editStockOrderDto.buyInPrice ?: stockOrder.buyInPrice,

@@ -12,6 +12,7 @@ interface StockOrderRepository : JpaRepository<StockOrder, UUID> {
             "(cast(:id as uuid) IS NULL OR s.id = :id) AND " +
             "(cast(:isin as string) IS NULL OR s.isin = :isin) AND " +
             "(cast(:wkn as string) IS NULL OR s.wkn = :wkn) AND " +
+            "(cast(:tickerSymbol as string) IS NULL OR s.tickerSymbol = :tickerSymbol) AND " +
             "(cast(:stockName as string) IS NULL OR s.stockName = :stockName) AND " +
             "(cast(:numberOfStocks as int) IS NULL OR s.numberOfStocks = :numberOfStocks) AND " +
             "(cast(:buyInPrice as long) IS NULL OR s.buyInPrice = :buyInPrice) AND " +
@@ -23,6 +24,7 @@ interface StockOrderRepository : JpaRepository<StockOrder, UUID> {
         id: UUID?,
         isin: String?,
         wkn: String?,
+        tickerSymbol: String?,
         stockName: String?,
         numberOfStocks: Int?,
         buyInPrice: Long?,

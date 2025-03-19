@@ -8,5 +8,6 @@ data class GetAccountDto(
     val startingBalance: Long,
     val instituteID: UUID,
     val transactionIDs: List<UUID>,
+    val stockOrderIDs: List<UUID>,
     val ownerID: UUID
 )

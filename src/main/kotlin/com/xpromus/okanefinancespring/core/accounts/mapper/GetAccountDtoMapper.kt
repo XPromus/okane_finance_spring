@@ -10,6 +10,7 @@ fun toGetAccountDto(account: Account): GetAccountDto {
         startingBalance = account.startingBalance,
         instituteID = account.institute.id!!,
         transactionIDs = account.transactions.map { it.id!! },
+        stockOrderIDs = account.stockOrders.map { it.id!! },
         ownerID = account.owner.id!!
     )
 }

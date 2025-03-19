@@ -8,6 +8,7 @@ fun toGetStockOrderDto(stockOrder: StockOrder): GetStockOrderDto {
         id = stockOrder.id!!,
         isin = stockOrder.isin,
         wkn = stockOrder.wkn,
+        tickerSymbol = stockOrder.tickerSymbol,
         stockName = stockOrder.stockName,
         numberOfStocks = stockOrder.numberOfStocks,
         buyInPrice = stockOrder.buyInPrice,
