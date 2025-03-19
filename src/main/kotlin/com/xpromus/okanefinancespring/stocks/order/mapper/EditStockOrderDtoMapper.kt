@@ -1,11 +1,13 @@
 package com.xpromus.okanefinancespring.stocks.order.mapper
 
+import com.xpromus.okanefinancespring.core.accounts.Account
 import com.xpromus.okanefinancespring.stocks.depot.Depot
 import com.xpromus.okanefinancespring.stocks.order.StockOrder
 import com.xpromus.okanefinancespring.stocks.order.dtos.EditStockOrderDto
 
 fun fromEditStockOrderDto(
     stockOrder: StockOrder,
+    targetWithdrawAccount: Account?,
     targetDepot: Depot?,
     editStockOrderDto: EditStockOrderDto
 ): StockOrder {
@@ -19,6 +21,7 @@ fun fromEditStockOrderDto(
         buyInPrice = editStockOrderDto.buyInPrice ?: stockOrder.buyInPrice,
         fees = editStockOrderDto.fees ?: stockOrder.fees,
         tradeDate = editStockOrderDto.tradeDate ?: stockOrder.tradeDate,
+        targetWithdrawAccount = targetWithdrawAccount ?: stockOrder.targetWithdrawAccount,
         targetDepot = targetDepot ?: stockOrder.targetDepot
     )
 }

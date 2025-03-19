@@ -14,6 +14,7 @@ fun toGetStockOrderDto(stockOrder: StockOrder): GetStockOrderDto {
         buyInPrice = stockOrder.buyInPrice,
         fees = stockOrder.fees,
         tradeDate = stockOrder.tradeDate,
+        targetWithdrawAccountID = stockOrder.targetWithdrawAccount.id!!,
         targetDepotID = stockOrder.targetDepot.id!!
     )
 }

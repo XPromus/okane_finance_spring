@@ -18,6 +18,7 @@ interface StockOrderRepository : JpaRepository<StockOrder, UUID> {
             "(cast(:buyInPrice as long) IS NULL OR s.buyInPrice = :buyInPrice) AND " +
             "(cast(:fees as long) IS NULL OR s.fees = :fees) AND " +
             "(cast(:tradeDate as timestamp) IS NULL OR s.tradeDate = :tradeDate) AND " +
+            "(cast(:targetWithdrawAccountId as uuid) IS NULL OR s.targetWithdrawAccount.id = :targetWithdrawAccountId) AND " +
             "(cast(:targetDepotId as uuid) IS NULL OR s.targetDepot.id = :targetDepotId)"
     )
     fun findStockOrdersByFields(
@@ -30,6 +31,7 @@ interface StockOrderRepository : JpaRepository<StockOrder, UUID> {
         buyInPrice: Long?,
         fees: Long?,
         tradeDate: Date?,
+        targetWithdrawAccountId: UUID?,
         targetDepotId: UUID?
     ): MutableList<StockOrder>
 

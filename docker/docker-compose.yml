@@ -3,6 +3,8 @@ services:
     build:
       context: ../
       dockerfile: ./docker/backend/Dockerfile
+      args:
+        APP_VERSION: "0.0.1-SNAPSHOT"
     container_name: okane_finance_backend
     depends_on:
       - db
@@ -15,6 +17,9 @@ services:
       - okane_network
     ports:
       - "8080:8080"
+#    entrypoint: /bin/sh
+#    tty: true
+#    stdin_open: true
   db:
     image: postgres
     container_name: okane_finance_db

@@ -13,5 +13,6 @@ data class GetStockOrderDto(
     val buyInPrice: Long,
     val fees: Long,
     val tradeDate: Date,
+    val targetWithdrawAccountID: UUID,
     val targetDepotID: UUID
 )

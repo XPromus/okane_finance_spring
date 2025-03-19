@@ -1,5 +1,6 @@
 package com.xpromus.okanefinancespring.stocks.order
 
+import com.xpromus.okanefinancespring.core.accounts.AccountService
 import com.xpromus.okanefinancespring.exceptions.EntityNotFoundException
 import com.xpromus.okanefinancespring.stocks.depot.DepotService
 import com.xpromus.okanefinancespring.stocks.order.dtos.CreateStockOrderDto
@@ -16,7 +17,8 @@ import java.util.*
 @Service
 class StockOrderService(
     private val stockOrderRepository: StockOrderRepository,
-    private val depotService: DepotService
+    private val depotService: DepotService,
+    private val accountService: AccountService
 ) {
     fun getStockOrderById(id: UUID): StockOrder {
         return stockOrderRepository.findById(id).orElseThrow {
@@ -36,6 +38,7 @@ class StockOrderService(
         buyInPrice: Long?,
         fees: Long?,
         tradeDate: Date?,
+        targetWithdrawAccountId: UUID?,
         targetDepotId: UUID?
     ): List<GetStockOrderDto> {
         val stockOrdersToReturn = stockOrderRepository.findStockOrdersByFields(
@@ -48,28 +51,37 @@ class StockOrderService(
             buyInPrice,
             fees,
             tradeDate,
+            targetWithdrawAccountId,
             targetDepotId
         )
         return stockOrdersToReturn.map { toGetStockOrderDto(it) }
     }
 
     fun createStockOrder(createStockOrderDto: CreateStockOrderDto): GetStockOrderDto {
+        val targetWithdrawAccount = accountService.getAccountById(createStockOrderDto.targetWithdrawAccountID)
         val targetDepot = depotService.getDepotById(createStockOrderDto.targetDepotID)
         val newStockOrder = stockOrderRepository.save(
-            fromCreateStockOrderDto(targetDepot, createStockOrderDto)
+            fromCreateStockOrderDto(targetWithdrawAccount, targetDepot, createStockOrderDto)
         )
         return toGetStockOrderDto(newStockOrder)
     }
 
     fun updateStockOrder(id: UUID, editStockOrderDto: EditStockOrderDto): GetStockOrderDto {
+        val targetWithdrawAccount = if (editStockOrderDto.targetWithdrawAccountID == null) {
+            null
+        } else {
+            accountService.getAccountById(editStockOrderDto.targetWithdrawAccountID)
+        }
+
         val targetDepot = if (editStockOrderDto.targetDepotID == null) {
             null
         } else {
             depotService.getDepotById(editStockOrderDto.targetDepotID)
         }
+
         return stockOrderRepository.findById(id).map {
             val save = stockOrderRepository.save(
-                fromEditStockOrderDto(it, targetDepot, editStockOrderDto)
+                fromEditStockOrderDto(it, targetWithdrawAccount, targetDepot, editStockOrderDto)
             )
             toGetStockOrderDto(save)
         }.orElseGet(null)

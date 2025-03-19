@@ -24,10 +24,11 @@ class StockOrderController(
         @RequestParam(name = "buyInPrice", required = false) buyInPrice: Long?,
         @RequestParam(name = "fees", required = false) fees: Long?,
         @RequestParam(name = "tradeDate", required = false) tradeDate: Date?,
+        @RequestParam(name = "targetWithdrawAccountId", required = false) targetWithdrawAccountId: UUID?,
         @RequestParam(name = "targetDepotId", required = false) targetDepotId: UUID?
     ): List<GetStockOrderDto> {
         return stockOrderService.getAllStockOrders(
-            id, isin, wkn, tickerSymbol, stockName, numberOfStocks, buyInPrice, fees, tradeDate, targetDepotId
+            id, isin, wkn, tickerSymbol, stockName, numberOfStocks, buyInPrice, fees, tradeDate, targetWithdrawAccountId, targetDepotId
         )
     }
 

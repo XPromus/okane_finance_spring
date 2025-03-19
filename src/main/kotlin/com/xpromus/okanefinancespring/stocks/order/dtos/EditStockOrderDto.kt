@@ -11,5 +11,6 @@ data class EditStockOrderDto(
     val buyInPrice: Long?,
     val fees: Long?,
     val tradeDate: Date?,
+    val targetWithdrawAccountID: UUID?,
     val targetDepotID: UUID?
 )
