@@ -1,8 +1,8 @@
 services:
   okane_finance_backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: ./docker/backend/Dockerfile
     container_name: okane_finance_backend
     depends_on:
       - db
